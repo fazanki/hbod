@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * @file
+ *
+ * MultiLink Redirect module for Drupal 7.
+ * Support: Commercial support and customization is available from www.netgenius.co.uk
+ * Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function multilink_redirect_permission() {
+  return array(
+    'bypass multilink redirect' => array(
+      'title' => t('Bypass MultiLink Redirect'),
+      'description' => t('Disable redirect and display a message showing where the user would be redirected to.'),
+    ),
+  );
+}
+
+/*
+ * Check if path is node/nid and return nid or FALSE.
+ */
+function multilink_redirect_node($path) {
+  $pattern = '!^node/([1-9]\d*)/?$!';
+  $ret = (preg_match($pattern, $path, $matches) != 0)? $matches[1] : FALSE;
+  ////multilink_set_message('matches: ' . print_r($matches, 1));
+  return $ret;
+}
+
+/*
+ * Return the full path *actually requested*, including protocol but without query string.
+ */
+function multilink_redirect_qpath() {
+  //See: http://php.net/manual/en/reserved.variables.server.php
+  $http = (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')? 'http' : 'https';
+  $path = parse_url(request_uri(), PHP_URL_PATH);
+  $fmt = variable_get('clean_url', 0)? '%s://%s%s' : '%s://%s?q=%s';
+  $result = sprintf($fmt, $http, $_SERVER['HTTP_HOST'], $path);
+  //drupal_set_message('qpath: ' . $result);
+  return $result;
+}
+
+/*
+ * Implements hook_init().
+ */
+function multilink_redirect_init() {
+  _multilink_redirect_main();
+}
+
+/*
+ * Main processing - may also be called during boot from multilink_redirect_cached.
+ * Test if redirect is needed and if so exit via drupal_goto().
+ */
+function _multilink_redirect_main() {
+  // Make sure MultiLink is initialised first.
+  multilink_init();
+
+  // Get the internal path to front-page.
+  // @todo Handle when site_frontpage is using an alias (not normally the case.))
+  $front = variable_get('site_frontpage', 'node');
+
+  // Get requested internal path (without language prefix).
+  $path = $_GET['q']? $_GET['q'] : $front;
+
+  // If this is a node/123 path, get Multilink's target path.
+  if ($nid = multilink_redirect_node($path)) {
+    $link = _multilink_getnode($nid);
+    // Use new path if node found, otherwise keep original path.
+    $rpath = $link? 'node/' . $link->nid : $path;
+  }
+  // Otherwise this is a not a node/123 path so don't change it.
+  else {
+    $rpath = $path;
+  }
+
+  // If $rpath is actually the front-page, use an empty path instead.
+  if ($rpath == $front)  {
+    $rpath = '';
+  }
+
+  // Get the actually requested full path including protocol.
+  $qpath = multilink_redirect_qpath();
+
+  // Get final target url for any redirect.
+  // Note: multilink_url() uses url() which gets the most recently added alias (if more than one.)
+  // Note: multilink_url() is fast because url() is fast - no significant gain with (standard) caching.
+  $rpath = multilink_url($rpath, TRUE);
+
+  // If requested and target urls are different then we need to redirect.
+  // Note use rawurldecode to double-check, in case of any weird characters in request.
+  if ($rpath != $qpath && rawurldecode($rpath) != $qpath) {
+
+    // Only redirect if $_POST is empty, processing index.php and not under Drush [#1278930]
+    if (empty($_POST) && $_SERVER['SCRIPT_NAME'] == '/index.php' && !function_exists('drush_main')) {
+      // Fix some compatibility issues when SecurePages is active.
+      if (function_exists('multilink_securepages_redirect_fix')) {
+        multilink_securepages_redirect_fix($rpath);
+      }
+
+      // Get the Query String (minus the 'q').
+      $get = $_GET; unset($get['q']);
+
+      // Bypass if user has permission - show message instead of redirecting.
+      $perm = 'bypass multilink redirect';
+      if (function_exists('user_access') && user_access($perm)) {
+        $url = url($rpath, array('query' => $get));
+        $tvars = array(
+          '%module' => 'MultiLink Redirect',
+          '!link' => l($url, $rpath, array('query' => $get)),
+          '%perm' => $perm,
+        );
+
+        $msg = t('%module: redirect to !link (not done due to %perm permission.)', $tvars);
+        drupal_set_message($msg, 'warning'); // $msg is safe - ignore coder warning about check_plain() etc.
+      }
+      // Else, do the redirect.
+      else {
+        drupal_goto($rpath, $get, NULL, 302);
+      }
+    }
+  }
+}
+
+// --- Drupal docs advise NOT closing PHP tags ---

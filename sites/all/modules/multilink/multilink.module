@@ -1,0 +1,478 @@
+<?php
+/**
+ * @file
+ *
+ * "MultiLanguage Links" (MultiLink) module for Drupal 7.
+ * Support: Commercial support and customization is available from www.netgenius.co.uk
+ * Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk.
+ */
+
+/*
+function multilink_menu() {
+  // Get $mod_name, and $mod_id;
+  extract(_multilink_get_ids());
+
+  $items[$mod_config_path] = array(
+    'title' => $mod_name,
+    'description' => t('Configure the %name module.', array('%name' => $mod_name)),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(sprintf('_%s_config_form', $mod_id)),
+    'access arguments' => array('administer filters'),
+  );
+  return $items;
+}
+ */
+
+function _multilink_config_form() {
+  // Get $mod_name, $mod_id and $mod_prefix;
+  extract(_multilink_get_ids());
+
+  // Some settings should be reset to default if set blank in the form:
+  $keys = array('pattern', 'short_help');
+  foreach ($keys as $key) {
+    if (!($$key = _multilink_setting($mod_prefix, $key))) {
+      variable_del($mod_prefix . $key);
+      $$key = _multilink_setting($mod_prefix, $key);
+    }
+  }
+
+  // Create collapsible section for this module in the filters configuration form.
+  // $section =& $form[$mod_id];
+  $section =& $form;
+  $fieldset =& $section;
+
+  $key = 'absolute';
+  $fieldset[$mod_prefix . $key] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Absolute urls'),
+    '#default_value' => _multilink_setting($mod_prefix, $key),
+    '#description' => t('If set, links will be generated with absolute urls, i.e: http://example.com/node/1'),
+  );
+
+  $key = 'short_help';
+  $fieldset[$mod_prefix . $key] = array(
+    '#type' => 'textarea',
+    '#title' => t('User help'),
+    '#rows' => 2,
+    '#default_value' => _multilink_setting($mod_prefix, $key),
+    '#description' => t('Filter-help shown to the user. This text is passed through t(). Blank to reset to default value.'),
+  );
+
+  return system_settings_form($form);
+
+}
+
+// Get $mod_id
+function _multilink_get_ids($format = FALSE) {
+
+  static $ids;
+  if (!isset($ids)) {
+    $mod_id = drupal_strtolower($mod_name = 'MultiLink');
+
+    // Define the prefix used for config values:
+    $format_id = ($format)? $format->format : 'none';
+    $mod_prefix = sprintf('%s_%s_', $mod_id, $format_id);
+    // If set, use shared config.
+    if (_multilink_setting($mod_prefix, 'shared')) {
+      $mod_prefix = $mod_id . '_shared_';
+    }
+
+    $mod_config_path = sprintf('admin/config/regional/%s', $mod_id);
+    $ids = compact('mod_name', 'mod_id', 'mod_prefix', 'mod_config_path');
+    $GLOBALS['multilink_prefix'] = $mod_prefix;
+  }
+  return $ids;
+}
+
+/*
+ * Build and return a url
+ */
+function multilink_url($path, $absolute = NULL) {
+  $options['absolute'] = ($absolute !== NULL)? $absolute : $GLOBALS['multilink_absolute'];
+
+  // We use the first of _multilink_preferred_languages()
+  // to build the url (language subdomain or path-prefix).
+  $pref_languages = _multilink_preferred_languages();
+  $language_list = language_list();
+  $options['language'] = $language_list[$pref_languages[0]];
+
+  // If MultiLink SecurePages is installed, use it.
+  if (function_exists('multilink_securepages_url')) {
+    return multilink_securepages_url($path, $options);
+  }
+  else {
+    return url($path, $options);
+  }
+}
+
+/*
+ * Get an array of preferred languages.
+ */
+function _multilink_preferred_languages() {
+
+  // Note: multilink_filter() overrides normal language preferences while processing text.
+  if (isset($GLOBALS['multilink_pref_languages'])) {
+    return $GLOBALS['multilink_pref_languages'];
+  }
+
+  // Build an array of preferred languages (if not already done) ...
+  static $pref_languages;
+  if (!isset($pref_languages)) {
+
+    // Get user and broswer languages.
+    $languages = language_list();
+    $user_language_id = locale_language_from_user($languages);
+    $browser_language_id = locale_language_from_browser($languages);
+
+    // Define an array of possible languages in default order.
+    // Since Drupal 7, more possibilities exist - see:
+    // http://api.drupal.org/api/drupal/developer--globals.php/global/language/7
+    // http://api.drupal.org/api/drupal/developer--globals.php/global/language_content/7
+    // http://api.drupal.org/api/drupal/developer--globals.php/global/language_url/7
+    $languages = array(
+      // The most recent language chosen via a language-switcher (MultiLink-specific.)
+      'selected'  => _multilink_session_language(),
+      // User-preferred language, from account if available.
+      'preferred' => $user_language_id,
+      // Language from browser (first preference).
+      'browser'   => $browser_language_id,
+      // Language selected by Drupal for interface (always same as "content"?)
+      'current'   => @$GLOBALS['language']->language,
+      // Language selected by Drupal for content (always same as "current"?)
+      'content'   => @$GLOBALS['language_content']->language,
+      // Language specified in the url
+      'url'       => @$GLOBALS['language_url']->language,
+      // Site default language
+      'default'   => @language_default()->language,
+    );
+
+    // Set order of preference - default can be changed via settings.php or variable_set().
+    // @todo Consider Providing a UI to set order.
+    $language_order = variable_get('multilink_language_order', FALSE);
+    if ($language_order === FALSE) {
+      // Use default order for preferred languages.
+      $pref_languages = $languages;
+    }
+    else {
+      // Build array of preferred languages in given order.
+      $pref_languages = array();
+      foreach ($language_order as $key) {
+        if ($languages[$key]) {
+          $pref_languages[$key] = $languages[$key];
+        }
+      };
+    }
+    //multilink_set_message('recalcuate: ' . print_r($pref_languages, 1));
+    $pref_languages = array_values(array_unique($pref_languages));
+    //multilink_set_message('unique: ' . print_r($pref_languages, 1));
+
+    // Remove any blank languages;
+    if (in_array('', $pref_languages)) {
+      while (($n = array_search('', $pref_languages)) !== FALSE) {
+        unset($pref_languages[$n]);
+      }
+      $pref_languages = array_values($pref_languages);
+    }
+    //multilink_set_message('_multilink_preferred_languages() -> ' . print_r($pref_languages, 1));
+  }
+
+  //multilink_set_message('_multilink_preferred_languages() -> ' . print_r($pref_languages, 1));
+  return array_values($pref_languages);
+}
+
+/*
+ * Return a $node object containing (at least) nid, language, title for translated version of $node.
+ * Return original $node if no suitable translation is available.
+ */
+function _multilink_get_translation($node, $pref_languages) {
+  global $language;
+
+  // If the node is not 'language neutral'...
+  if ($node->language) {
+    // Get translations;
+    drupal_load('module', 'translation');
+    $translations = translation_node_get_translations($node->tnid);
+
+    foreach ($pref_languages as $lang) {
+      if (isset($translations[$lang])) {
+        $node = $translations[$lang];
+        break;
+      }
+    }
+  }
+  /*
+  // @todo Else if Language Sections is in use...
+  elseif (function_exists('language_sections_format_check')) {
+    // If node uses Language Sections filtering...
+    if (language_sections_format_check($node->format)) {
+      // @todo: Get supported languages from LS.  Needs supporting updates in LS.
+    }
+  }
+  */
+  return $node;
+}
+
+/*
+ * Cache operations.
+ */
+function _multilink_cache($op, $nid, $pref_languages = array(), $data = NULL) {
+
+  // We are using our own cache table, so don't need to worry about key conflicts with other modules.
+  $table = 'cache_multilink';
+  $base_key = $nid? sprintf('nid:%d:', $nid) : '*';
+  $full_key = sprintf('%s%08x', $base_key, crc32(implode(':', $pref_languages)));
+
+  // Additional static cache, effective when same nodes are referenced several times per page.
+  static $saved;
+
+  switch ($op) {
+    case 'get':
+      // Retrieve from cache.
+      if (isset($saved[$full_key])) {
+        return $saved[$full_key];
+      }
+      else {
+        $cached = cache_get($full_key, $table);
+        if ($cached) {
+          $saved[$full_key] = $cached->data;
+          return $saved[$full_key];
+        }
+        else {
+          return FALSE;
+        }
+      }
+    case 'set':
+      // Store in cache for 24 hours.
+      cache_set($full_key, $data, $table, REQUEST_TIME + 86400);
+      $saved[$full_key] = $data;
+      return;
+    case 'clear':
+      // Clear selected cache entries.
+      //drupal_set_message('clear cache for nid: ' . $nid);
+      cache_clear_all($base_key, $table, TRUE);
+      unset($saved);
+      return;
+  }
+}
+
+/*
+ * Implement hook_flush_caches().
+ */
+function multilink_flush_caches() {
+  return array('cache_multilink');
+}
+
+function _multilink_getnode($nid) {
+  // Load from cache if available.
+  $pref_languages = _multilink_preferred_languages();
+  $result = _multilink_cache('get', $nid, $pref_languages);
+
+  if (!$result) {
+    // Build from scratch and store in cache.
+    $result = _multilink_buildnode($nid, $pref_languages);
+    if ($result) {
+      _multilink_cache('set', $nid, $pref_languages, $result);
+    }
+  }
+  return $result;
+}
+
+function _multilink_buildnode($nid, $pref_languages) {
+  global $language;
+  $result = new stdClass();
+
+  // We need to load the node to get its language and tnid.
+  drupal_load('module', 'node');
+  drupal_load('module', 'user');
+  drupal_load('module', 'field');
+  $node = node_load($nid);
+  // We may get here with with $nid of non-existant node.
+  if (!$node) {
+    return;
+  }
+
+  // If the node has a language but it's not the first preferred language...
+  if ($node->language && $node->language != $pref_languages[0]) {
+    // Try to find a suitable translation.
+    $node = _multilink_get_translation($node, $pref_languages);
+  }
+
+  // Set nid and language into result.
+  $result->nid = $node->nid;
+  $result->language = $node->language;
+
+  // If node language is different from interface language, show actual language in title.
+  // @todo Ideally we would do this when language is different from *current content* language.
+  if ($node->language && $node->language != $language->language) {
+    $result->title = sprintf('[%s] %s', locale_language_name($node->language), $node->title);
+  }
+  else {
+    $result->title = $node->title;
+  }
+  // Security: Store a flag indicating whether anonymous access is allowed.
+  $result->access = node_access('view', $node, drupal_anonymous_user());
+
+  return $result;
+}
+
+/*
+ * Define default values for settings, get individual setting.
+ * Note: Settings specific to the filter are now in _multilink_filter_default_settings().
+ */
+function _multilink_setting($mod_prefix, $key) {
+  static $defaults;
+  if (!isset($defaults)) {
+
+    $defaults = array(
+      //'key' => 'value',
+    );
+
+    // Merge settings from multilink_filter.
+    if (function_exists('_multilink_filter_default_settings')) {
+      $defaults += _multilink_filter_default_settings();
+    }
+  }
+  return variable_get($mod_prefix . $key, @$defaults[$key]);
+}
+
+
+/*
+ * Implement hook_node_insert().
+ */
+function multilink_node_insert($node) {
+  // If we have a translation source, process translations for *that* node.
+  if (isset($node->translation_source)) {
+    _multilink_cache_clear_translations($node, $node->translation_source->tnid);
+  }
+  // Just to be safe, clear any cache entries for the new node.
+  _multilink_cache('clear', $node->nid);
+}
+
+/*
+ * Implement hook_node_update().
+ */
+function multilink_node_update($node) {
+  _multilink_cache_clear_translations($node, $node->tnid);
+}
+
+/*
+ * Implement hook_node_delete().
+ */
+function multilink_node_delete($node) {
+  _multilink_cache_clear_translations($node, $node->tnid);
+}
+
+/*
+ * Clear any cached entries for a node's translations.
+ */
+function _multilink_cache_clear_translations($node, $tnid) {
+  // Get translations for this node, and clear cached entries.
+  $translations = translation_node_get_translations($tnid);
+
+  // If no translations exist, just delete cache entries for current node.
+  if (empty($translations)) {
+    _multilink_cache('clear', $node->nid);
+  }
+  else {
+    // Loop through all translations deleting cache entries.
+    foreach ($translations as $translation) {
+      _multilink_cache('clear', $translation->nid);
+    }
+  }
+}
+
+/**
+ * Implement hook_url_outbound_alter().
+ * Add a query string to translation links - allows detection of explicit
+ * language choice by user.  This works for the standard translation links
+ * on node pages and standard Language Switcher block. Will also work with
+ * other links which have class 'translation-link' or 'language-link'.
+ */
+function multilink_url_outbound_alter($path, &$options, $original_path) {
+  // drupal_set_message(sprintf('url_outbound_alter - path: %s original: %s options: %s', $path, $original_path, print_r($options, 1)));
+  // drupal_set_message(sprintf('url_outbound_alter - path: %s original: %s class: %s', $path, $original_path, print_r(@$options['attributes']['class'], 1)));
+  if (is_array($class = @$options['attributes']['class'])) {
+    if (in_array('language-link', $class) || in_array('translation-link', $class)) {
+      $options['query']['multilink'] = 'switch';
+    }
+  }
+}
+
+/*
+ * Utility function to update a link (used above.)
+ */
+function _multilink_update_link(&$link) {
+  $link['query']['multilink'] = 'switch';
+  ////multilink_set_message(print_r($link, 1), 'warning');
+}
+
+/*
+ * Implement hook_init().
+ * Check for ?multilink = switch in request, and process it if found.
+ * If found, we redirect to the same path, inlcuding any other elements of the quiery string.
+ * Note: May also be called via multilink_redirect_cached_boot in which case Drupal boot is not yet complete,
+ * but in that case the caller is responsible for ensuring that required includes and modules have been loaded.
+ */
+function multilink_init() {
+  static $done;
+
+  if (!$done) {
+    //multilink_set_message('multilink_init');
+    $done = TRUE;
+
+    // If the user arriving from a "language switcher" or similar link,
+    // we will regard the chosen language as their preferred language from now on.
+    // We use global $language_url as that should be correct (global $language may not be.)
+    // Note: $_GET['multilink'] gets added to links via our _url_outbound_alter hook.
+    if (@$_GET['multilink'] == 'switch') {
+      $set_language = $GLOBALS['language_url']->language;
+      _multilink_session_language($set_language);
+
+      // For tidiness/SEO, redirect to the same url without $_GET['multilink'].
+      $get = $_GET;
+      unset($get['q'], $get['multilink']);
+      $request = '/' . request_path();
+      // Note, we 'external' here to maintain the requested path (no alias or language conversion wanted.)
+      // $url = url($request, array('query' => $get, 'external'=> 1)); drupal_set_message('url: ' . $url);
+      drupal_goto($request, array('query' => $get, 'external' => 1));
+    }
+  }
+}
+
+/*
+ * Return and optionally set the "preferred" language for current session.
+ * We use cookies rather than $_SESSION so that this can work during bootstrap.
+ */
+function _multilink_session_language($language = FALSE) {
+  $cookie = 'multilink_pl';
+  if ($language) {
+    // Set a cookie to expire in 24 hours.
+    setcookie($cookie, $language, REQUEST_TIME + 86400, '/', $GLOBALS['cookie_domain']);
+    $_COOKIE[$cookie] = $language;
+  }
+  ////multilink_set_message(sprintf('session_language: %s', $_COOKIE[$cookie]));
+  return (isset($_COOKIE[$cookie]))? $_COOKIE[$cookie] : NULL;
+}
+
+/*
+ * Utility to display or log debug messages.
+ */
+
+/***
+function multilink_set_message($message = NULL, $type = 'status') {
+  //return;
+  if ($GLOBALS['user']->uid == 1) {
+    drupal_set_message(filter_xss($message), $type);
+  }
+  else {
+    static $log;
+    $logname = '/tmp/multilink.log';
+    if (!isset($log)) {
+      $log = fopen($logname, 'a');
+    }
+    fwrite($log, sprintf("[%s][%s] %s\n", REQUEST_TIME, $type, $message));
+  }
+}
+***/
+
+// --- Drupal docs advise NOT closing PHP tags ---

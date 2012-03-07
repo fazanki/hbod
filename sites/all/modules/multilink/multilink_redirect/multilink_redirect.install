@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function multilink_redirect_install() {
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function multilink_redirect_uninstall() {
+}

@@ -1,0 +1,14 @@
+name = MultiLink Filter
+description = Input filter to generate language-dependent node links.
+package = "Multilanguage"
+
+; --- Drupal 7.x ---
+core = 7.x
+dependencies[] = multilink
+
+; Information added by drupal.org packaging script on 2012-01-30
+version = "7.x-2.9"
+core = "7.x"
+project = "multilink"
+datestamp = "1327926976"
+

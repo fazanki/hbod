@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Determines which content to show depending on the current page language and the default language of the site
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function language_switcher_permission() {
+  return array(
+    'administer language_switcher' => array(
+      'title' => t('Administer Language Switcher'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function language_switcher_menu() {
+  $items['admin/config/regional/language/language_switcher'] = array(
+    'title' => 'Language Switcher',
+    'description' => 'Determines which content to show depending on the current page language and the default language of the site.',
+    'page arguments' => array('language_switcher_admin_settings'),
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('administer language_switcher'),
+    'weight' => 20,
+    'file' => 'language_switcher.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Get enabled languages.
+ */
+function language_switcher_enabled_languages() {
+  $enabled = language_list('enabled');
+  $enabled = $enabled[1];
+  $languages = array();
+
+  foreach ($enabled as $langcode => $language) {
+    $languages[] = $langcode;
+  }
+
+  return $languages;
+}
+
+/**
+ * Implements hook_page_alter().
+ *
+ * Re-sort and group nodes in respect to each node's language.
+ */
+function language_switcher_page_alter(&$page) {
+  $enabled = language_switcher_enabled_languages();
+  $mode = variable_get('language_switcher_mode', 'off');
+
+  if ($mode == 'multi') {
+    foreach ($page as $region => $item) {
+      if (is_array($item) && isset($item['system_main']) && isset($item['system_main']['nodes'])) {
+        $nodes = $page[$region]['system_main']['nodes'];
+
+        $lang_sorted_nodes = array();
+        foreach ($nodes as $key => $value) {
+          // If it's a node with language.
+          if (isset($value['#node']->language)) {
+            // If node listing page, e.g. frontpage.
+            if ($value['#view_mode'] == 'teaser') {
+              $langcode = $value['#node']->language;
+              if (in_array($langcode, $enabled)) {
+                $lang_sorted_nodes[$langcode][] = $value;
+              }
+            }
+            elseif ($value['#view_mode'] == 'full') {
+              // @TODO fix single node view
+              // @TODO support entity_translation
+              return;
+
+              $node = node_load($key);
+              if ($node->tnid) {
+                $translations = translation_node_get_translations($node->tnid);
+                $nids = array();
+                foreach ($translations as $translation) {
+                  $nids[] = $translation->nid;
+                }
+
+                $translations_nodes = node_load_multiple($nids);
+                $builds = node_view_multiple($translations_nodes, $value['#view_mode']);
+                $page[$region]['system_main']['nodes'] = $builds;
+
+                // @TODO do we have a page with many full nodes?
+                return;
+              }
+            }
+          }
+          else {
+            // Other than node, usually #sorted prop.
+            $prop[$key] = $value;
+          }
+        }
+
+        language_switcher_add_files();
+        $items = $lang_sorted_nodes + $prop;
+        $page['content']['system_main']['nodes'] = $items;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function language_switcher_preprocess_node(&$vars) {
+  $vars['classes_array'][] = $vars['language'];
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Rewrite node queries so language selection options are enforced.
+ */
+function language_switcher_query_node_access_alter(QueryAlterableInterface $query) {
+  global $language_content;
+  $mode = variable_get('language_switcher_mode', 'off');
+
+  $tables =& $query->getTables();
+
+  if (($mode == 'strict') && (isset($tables['n']))) {
+    // if the language field is present we don't want to do any filtering.
+    $fields = $query->getFields();
+
+    if (array_key_exists('language', $query->getFields())) {
+      return;
+    }
+    else {
+      $query->condition('n.language', $language_content->language, '=');
+    }
+  }
+}
+
+/**
+ * Add required files to override default language switcher block behaviour.
+ */
+function language_switcher_add_files() {
+  drupal_add_js(array('languages' => language_switcher_enabled_languages()), 'setting');
+  drupal_add_js(drupal_get_path('module', 'language_switcher') . '/language_switcher.js');
+  drupal_add_css(drupal_get_path('module', 'language_switcher') . '/language_switcher.css');
+}

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ *
+ * Provides install/uninstall processes for our cache table and configuration variables.
+ */
+
+/**
+ * Implement hook_schema() - creates our own cache table.
+ */
+function multilink_schema() {
+  $schema['cache_multilink'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_multilink']['description'] = 'Cache table for MultiLink - can be safely emptied.';
+  return $schema;
+}
+
+/**
+ * Implement hook_uninstall() - deletes our configuration variables.
+ */
+function multilink_uninstall() {
+  _multilink_delete_config('multilink_');
+}
+
+/**
+ * Remove our variables.
+ */
+function _multilink_delete_config($name) {
+  $len = drupal_strlen($name);
+  foreach ($GLOBALS['conf'] as $key => $value) {
+    if (drupal_substr($key, 0, $len) == $name) {
+      variable_del($key);
+    }
+  }
+}

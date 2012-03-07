@@ -1,0 +1,33 @@
+.content {
+  overflow: hidden;
+}
+
+.block ul.language-switcher-locale-url {
+  list-style: none;
+  padding: 0;
+}
+
+.block ul.language-switcher-locale-url a.language-link {
+  display: block;
+  outline: none;
+  padding: 5px;
+}
+
+ul.language-switcher-locale-url a.on {
+  background-color: #219DE6;
+  border: 1px solid #f6f6f2;
+  color: #f6f6f2;
+}
+ul.language-switcher-locale-url a.off {
+  background-color: #ccc;
+  border: 1px solid #f6f6f2;
+  color: #f6f6f2;
+}
+
+
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+}

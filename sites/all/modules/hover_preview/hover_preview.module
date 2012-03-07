@@ -1,0 +1,175 @@
+<?php
+
+/**
+ * Implements hook_library().
+ */
+function hover_preview_library() {
+  $libraries['imgPreview'] = array(
+    'title' => 'Image Preview',
+    'website' => 'http://plugins.jquery.com/project/imgPreview',
+    'version' => '0.22',
+    'js' => array(
+      drupal_get_path('module', 'hover_preview') . '/imgpreview.min.jquery.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'hover_preview') . '/hover_preview.imgpreview.css' => array(),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function hover_preview_field_formatter_info() {
+  $formatters['hover_preview'] = array(
+    'label' => t('Hover Preview'),
+    'field types' => array('image'),
+    'settings' => array(
+      'image_style' => '',
+      'image_link' => '',
+      'hover_preview_style' => '',
+      'hover_preview_action' => '',
+    ),
+  );
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function hover_preview_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  // Build off of the Image field formatter settings.
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $element = image_field_formatter_settings_form($field, $instance, $view_mode, $form, $form_state);
+
+  // Add the Hover Preview settings.
+  $element['hover_preview_action'] = array(
+    '#title' => t('Hover preview action'),
+    '#type' => 'select',
+    '#default_value' => $settings['hover_preview_action'],
+    '#required' => TRUE,
+    '#options' => array(
+      'imgpreview' => t('Image Preview'),
+      'replace' => t('Replace Image'),
+    ),
+  );
+  $image_styles = image_style_options(FALSE);
+  $element['hover_preview_style'] = array(
+    '#title' => t('Hover preview style'),
+    '#type' => 'select',
+    '#default_value' => $settings['hover_preview_style'],
+    '#empty_option' => t('None (original image)'),
+    '#options' => $image_styles,
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function hover_preview_field_formatter_settings_summary($field, $instance, $view_mode) {
+  // Build off of the Image summary.
+  $summary = image_field_formatter_settings_summary($field, $instance, $view_mode);
+
+  // Add in the Hover Preview action.
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  if (isset($settings['hover_preview_action']) && !empty($settings['hover_preview_action'])) {
+    $summary .= '<br />' . t('Hover preview action: @action', array('@action' => $settings['hover_preview_action']));
+  }
+  else {
+    $summary .= '<br />' . t('Hover preview action: Preview Image');
+  }
+
+  // Display the Hover Preview image style.
+  $image_styles = image_style_options(FALSE);
+  if (isset($image_styles[$settings['hover_preview_style']])) {
+    $summary .= '<br />' . t('Hover preview style: @style', array('@style' => $image_styles[$settings['hover_preview_style']]));
+  }
+  else {
+    $summary .= '<br />' . t('Hover preview style: Original image');
+  }
+
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function hover_preview_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  // Each hover preview item is created with an image element.
+  foreach ($items as $delta => $item) {
+    $element[$delta]['#theme'] = 'image';
+
+    // The title tag.
+    if (isset($item['title']) && !empty($item['title'])) {
+      $element[$delta]['#title'] = $item['title'];
+    }
+
+    // The alt tag.
+    if (isset($item['alt']) && !empty($item['alt'])) {
+      $element[$delta]['#alt'] = $item['alt'];
+    }
+
+    // The image path is contructed based on the image style.
+    if (isset($display['settings']['image_style']) && !empty($display['settings']['image_style'])) {
+      $element[$delta]['#path'] = image_style_url($display['settings']['image_style'], $item['uri']);
+    }
+    else {
+      // If no image style is provided, we use the original image.
+      $element[$delta]['#path'] = $item['uri'];
+    }
+
+    // The hover preview image style.
+    if (isset($display['settings']['hover_preview_style']) && !empty($display['settings']['hover_preview_style'])) {
+      $hover_uri = image_style_path($display['settings']['hover_preview_style'], $item['uri']);
+      $element[$delta]['#attributes']['data-hover-preview'] = file_create_url($hover_uri);
+    }
+    else {
+      // If no hover preview style is provided, we use the original image.
+      $element[$delta]['#attributes']['data-hover-preview'] = file_create_url($item['uri']);
+    }
+
+    // Provide the hover-preview class and the action (default is imgpreview).
+    $action = (isset($display['settings']['hover_preview_action']) && !empty($display['settings']['hover_preview_action'])) ? $display['settings']['hover_preview_action'] : 'imgpreview';
+    $element[$delta]['#attributes']['class'][] = 'hover-preview-' . $action;
+    $element[$delta]['#attributes']['class'][] = 'hover-preview';
+
+    // Special use cases for certain hover preview actions.
+    switch ($action) {
+      // Image Preview requires the imgPreview library.
+      case 'imgpreview':
+        $element[$delta]['#attached']['library'][] = array('hover_preview', 'imgPreview');
+      break;
+    }
+
+    // Check if the formatter involves a link.
+    switch ($display['settings']['image_link']) {
+      case 'content':
+        // Link directly to the entity content.
+        $uri = entity_uri($entity_type, $entity);
+        $element[$delta]['#prefix'] = '<a href="' . url($uri['path'], $uri['options']) . '">';
+        $element[$delta]['#suffix'] = '</a>';
+      break;
+      case 'file':
+        // Link directly to the file.
+        $element[$delta]['#prefix'] = '<a href="' . file_create_url($item['uri']) . '">';
+        $element[$delta]['#suffix'] = '</a>';
+      break;
+    }
+
+    // The Hover Preview module requires the JavaScript to load the behaviors.
+    $element[$delta]['#attached']['js'][] = array(
+      'data' => drupal_get_path('module', 'hover_preview') . '/hover_preview.js',
+      'type' => 'file',
+    );
+  }
+
+  return $element;
+}
+

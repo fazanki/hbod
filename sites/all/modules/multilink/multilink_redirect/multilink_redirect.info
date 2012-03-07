@@ -1,0 +1,14 @@
+name = MultiLink Redirect
+description = "Redirects user to a suitable location based on language preference."
+package = "Multilanguage"
+
+; --- Drupal 7.x ---
+dependencies[] = multilink
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-01-30
+version = "7.x-2.9"
+core = "7.x"
+project = "multilink"
+datestamp = "1327926976"
+

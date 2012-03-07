@@ -1,0 +1,194 @@
+CHANGELOG for MultiLink modules
+===============================
+
+Mon 30 Jan 2012 12:10:17 PM CET
+
+General tidy-up of comments and code standards.  No functional changes.
+
+=== Planned for release as 2.9 ===
+
+
+Mon 30 Jan 2012 10:01:23 AM CET
+
+MultiLink
+* Kristen Pol - Added test for _multilink_filter_default_settings() before calling it - fixes [#1407304]
+* Removed debug message in install file and re-activated variable deletion on uninstall.
+* Removed unused multilink_menu() hook.
+
+MultiLink Filter
+* Kristen Pol - Fixed substr_compare error [#1407288] (recoded to be shorter.)
+
+General tidy-up of comments and code standards.
+
+
+
+Fri 9 Dec 2011 16:09 CEST
+
+MultiLink Redirect
+* Added test for Drush - fixes [#1278930]
+* Fixed bypass permission [#1352448] - Nexsoft
+
+MultiLink Filter
+* Tidied code for _multilink_filter_getnode() - no functional change.
+
+=== Planned for release as 2.8 ===
+
+
+MultiLink Core
+* Added initialised $result in _multilink_buildnode() to prevent PHP strict warning.
+
+MultiLink Filter
+* Fixed minor security issue - don't display node title in link if current user cannot access target node. Displays 'Not allowed' instead - _multilink_filter_getnode().
+
+=== Planned for release as 2.7 ===
+
+
+Wed 21 Sep 2011 09:44:09 PM CEST
+
+* MultiLink Redirect cached page support moved into new module MultiLink Redirect Cached.
+* Performance with cached pages improved (near twice as fast) by not loading modules unless needed.
+* Added support to language prefs for browser and url language.
+* Fixed [#1286526] - reported by MyXelf
+* Spelling fixes [#1286540] - reported by MyXelf
+* Removed Secure Pages support module (pending testing of D7 Secure Pages module.)
+* Various other tweaks and fixes.
+
+=== Planned for release as 2.7 beta 1 ===
+
+Tue 20 Sep 2011 11:51:35 PM CEST
+
+* Language switch detection now working.
+* Redirect of cached pages working.
+
+In summary, believed fully working.
+
+
+Mon 19 Sep 2011 11:07:01 PM CEST
+
+* First working D7 version - MultiLink Filter and core believed fully working.
+* Numerous changes to support D7.
+* Split original multilink module into spearate core and input filter modules.
+
+
+
+--- Below here was the changelog for the D6 branch ----
+
+Thu 15 Sep 2011 07:35:13 PM CEST
+
+=== To release as 2.6 ===
+
+
+Thu 15 Sep 2011 06:20:16 PM CEST
+
+MultiLink Redirect
+
+* Added re-direction for cached pages. Currently defaults to enabled (unless page caching is disabled.)  It can be disabled in settings.php with:
+$conf['multilink_redirect_cached_pages'] = FALSE;
+
+When enabled, anonymous access to node/123 would be redirected to fr/node/124 where 124 is the French version of 123 and preferred language from browser is French. If a path for node/124 exists the visitor will be redirected there. This would previously only happen for non-cached pages.  Redirection in this way is probably better for SEO and user-experience, but has a small performance impact (only significant when serving cached pages.)
+
+* Fixed unreported bug which could result in invalid entires in the module's cache table. The effect of the bug was that trying to go to node/123 where there 123 does not exist would result in being redirected to the front-page.
+
+* Other small fixes to front-page handling.
+
+MultiLink
+
+* Added support for the above changes in ML Redirect.
+
+* Added drupal_goto to redirect to plain url without &multilink=switch after deliberate language switch.
+
+* Other minor changes.
+
+
+Tue 13 Sep 2011 11:25:07 PM CEST
+
+MultiLink
+
+* Addressed behaviour when user is anonymous and page-caching is enabled. Forces current language to be used instead of user preference - this prevents cached pages from containing links generated based on user (browser) preferred language.
+
+* Added Pathologic to supported formats.
+
+* Other minor tweaks.
+
+Mon 12 Sep 2011 06:19:03 PM CEST
+
+MultiLink
+
+* Added detection of deliberate language switching by user. This works with the standard Drupal language switcher block, and any other methods which generated links in such a way that HOOK_translation_link_alter will be called.  Also works with the standard links to translations typically shown on node pages, and any other links which have class='translation-link' set.  Adds ?multilink=switch to those links, which is then checked via hook_init.
+
+* Added additional highest language preference, saved in session, and set when a deliberate language switch is detected (see above.)  So, after a language switch is performed, the new language is then used as the first preferred language for ML link generation.
+
+* Added possibility for setting order of preference in settings.php using 'multilink_language_order' e.g:
+$conf['multilink_language_order'] = array('current','selected','preferred','default');
+If not defined, default is: 'selected','preferred','current','default'.
+
+* Fixed bug fix in processing of HTML anchor tags (small change to regexp.)
+
+MultiLink Redirect
+
+* Changed so that no redirect is performed when deliberate language switch is detected (see above.)
+
+=== To release as 2.5. ===
+
+Thu 16 Sep 2010 14:40:05 CEST
+
+MultiLink Redirect
+* Added 'bypass multilink redirect' permission to prevent redirect for admin and any other assigned roles (for testing or translation team.)
+
+MultiLink Redirect
+* Added hooks to modifiy translation links and add 'bypass option so that manually selecting translation will now work as expected. Tested with language switcher block, language switcher dropdown, and standard node-view translation links.
+
+Fri 10 Sep 2010 20:54:54 CEST
+
+MultiLink
+* Bug fix to multilink_url - preferred language was not set properly, so urls would not use it.
+
+MultiLink Secure Pages
+* Minor fix to function definition to prevent PHP warnings about pass-by-reference.
+
+To release as 2.4
+
+
+Fri 10 Sep 2010 18:30:32 CEST
+
+MultiLink:
+* Changed multilink_nodeapi() and _mulitlink_cache() to address cache update issue when deleting nodes. See [#907724]
+
+Fri 10 Sep 2010 06:10:49 CEST
+
+MultiLink:
+* Changed to use user's language preference when generating url, see [#796822]
+
+MultiLink Redirect
+* Added 'bypass multilink redirect' permission to prevent redirect for admin and any other assigned roles (for testing or translation team.)
+
+To be released as 2.2.
+
+Tue 11 May 2010 15:04:16 CEST
+
+MultiLink Redirect:
+* Fixed #795798 (redirect loop when Clean URLs disabled.)
+
+Thu 15 Apr 2010 21:23:53 CEST
+Extensive changes:
+* Added new modules: MultiLink Redirect and MultiLink SecurePages
+* Added support for new modules in multilink.module.
+* Renamed _multilink functions get_link and _build_link to _getnode and _buildnode.
+
+To be released as 2.0 so as to keep a 1.x branch in case needed.
+
+Mon 12 Apr 2010 18:01:54 CEST
+
+* Added 'format_test' mode which makes it easier to test input formats before enabling other filter modules.
+* Fixed #769076 - Bug in InsertNode regexp.
+* Added support for LinoDef and Link-node formats.
+* Removed config 'use_alias' option, now always done for urls (not for node tags such as PathFilter and InsertNode).
+* Fixed: 'absolute' setting was not initialised correctly on config form.
+* To release as 1.2
+
+-----
+
+* Now supports various other link formats - Markdown, PathFilter, InsertNode and HTML.
+* Allowed output caching (configurable) if check_markup_language_patch_1 is installed.
+* To release as 1.1
+

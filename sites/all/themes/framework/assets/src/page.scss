@@ -1,0 +1,123 @@
+// import BASE
+@import 'base';
+
+//import burbon 
+@import 'bourbon/bourbon';
+
+// import mixin
+@import "mixin";
+
+
+.clearfix:before, 
+.clearfix:after { 
+    content: "\0020"; 
+    display: block; 
+    height: 0; 
+    overflow: hidden; 
+    }
+.clearfix:after { clear: both; }
+
+
+body {
+    
+    @include clearfix;
+    font-size:0.75em;
+    background: #fff;
+    color: #222;
+    font-family: $body-font;
+    font-size: 100%;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+   
+    
+    header {
+        #logo {
+            float:left;
+        
+            img {
+                width:100px;
+                @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+            }
+       
+        }
+        hgroup {
+           
+            h1 {
+    
+                 position:absolute;
+                 margin:115px 0 0 -10px;
+                 font-size:1em;
+                 -moz-transform:rotate(90deg);
+                 -moz-transform:rotate(90deg);
+                 -webkit-transform:rotate(90deg);
+                 -o-transform:rotate(90deg);
+                 -ms-transform:rotate(90deg);
+                 filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5);
+                a {
+                    color:$heading-color;
+                    font-size:inherit;
+                    text-decoration:none;
+                }
+            }
+        }
+        #block-views-slideshow-heading-block {
+            img {
+                @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
+            }
+            margin:50px 0 0 150px;
+            position:relative;
+            span {
+                 position:absolute;
+                 display:block;
+                 background:#fff;
+                 padding:3px 10px;
+                 text-transform:capitalize;
+            }
+            .slideShowTitle{
+                top:155px;
+                left:10px;
+                
+            }
+            
+            .slideShowCaption{
+                top:190px;
+                left:10px;
+                
+            }
+        }
+    }
+    
+    #block-superfish-1 {
+        #superfish-1{
+            a {
+                font-size:0.75em;
+                background:$heading-color;
+                color:#000;
+                text-transform:uppercase;
+                &:hover {
+                    color:#f00;
+                }
+            }
+        }
+    }
+    
+    aside#sidebar-second{
+        .sml-pix {
+            img {
+                @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
+                @include border-radius(20px)
+            }
+        }
+    }
+}
+
+
+// dev default command:
+// use this one all the time to include burboun 
+// sass --watch -t expanded src/page.scss:css/page.css -r src/bourbon/lib/bourbon.rb
+
+// sass --watch -t expanded src:css
+
+// Example (project root directory)
+// sass --watch stylesheets/sass:stylesheets -r ./stylesheets/sass/bourbon/lib/bourbon.rb

@@ -1,0 +1,98 @@
+.clearfix:before,
+.clearfix:after {
+  content: "\0020";
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+body {
+  zoom: 1;
+  font-size: 0.75em;
+  background: #fff;
+  color: #222;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+  font-size: 100%;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+body:before, body:after {
+  content: "";
+  display: table;
+}
+body:after {
+  clear: both;
+}
+body header #logo {
+  float: left;
+}
+body header #logo img {
+  width: 100px;
+  -webkit-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.4);
+  -moz-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.4);
+  box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.4);
+}
+body header hgroup h1 {
+  position: absolute;
+  margin: 115px 0 0 -10px;
+  font-size: 1em;
+  -moz-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5);
+}
+body header hgroup h1 a {
+  color: #00cc00;
+  font-size: inherit;
+  text-decoration: none;
+}
+body header #block-views-slideshow-heading-block {
+  margin: 50px 0 0 150px;
+  position: relative;
+}
+body header #block-views-slideshow-heading-block img {
+  -webkit-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.6);
+  -moz-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.6);
+  box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.6);
+}
+body header #block-views-slideshow-heading-block span {
+  position: absolute;
+  display: block;
+  background: #fff;
+  padding: 3px 10px;
+  text-transform: capitalize;
+}
+body header #block-views-slideshow-heading-block .slideShowTitle {
+  top: 155px;
+  left: 10px;
+}
+body header #block-views-slideshow-heading-block .slideShowCaption {
+  top: 190px;
+  left: 10px;
+}
+body #block-superfish-1 #superfish-1 a {
+  font-size: 0.75em;
+  background: #00cc00;
+  color: #000;
+  text-transform: uppercase;
+}
+body #block-superfish-1 #superfish-1 a:hover {
+  color: #f00;
+}
+body aside#sidebar-second .sml-pix img {
+  -webkit-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.6);
+  -moz-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.6);
+  box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.6);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  border-radius: 20px;
+}

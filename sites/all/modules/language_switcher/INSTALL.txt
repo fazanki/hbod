@@ -1,0 +1,18 @@
+
+INSTALLATION
+=============
+
+1. Download, extract the module file into 'sites/all/modules/' folder.
+2. Enable local and content translation modules.
+3. Add another languages (e.g. Arabic, French).
+4. Go to Language Switcher config page (admin/config/regional/language/language_switcher), select what mode you want to use.
+5. Add some nodes, add translations.
+6. From blocks page select Language Switcher block and put it in sidebar for example.
+7. Go back to the home page, the language switcher block now is clickable not just links, you should see nodes flying over there if you selected multi mode, try it!
+
+
+
+MAINTAINERs
+=============
+
+  Khaled Alhourani (good_man) http://drupal.org/user/265439/

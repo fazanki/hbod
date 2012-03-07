@@ -1,0 +1,11 @@
+name = Hover Preview
+description = A jQuery-based hover preview feature for Image fields.
+core = 7.x
+dependencies[] = image
+
+; Information added by drupal.org packaging script on 2011-05-09
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "hover_preview"
+datestamp = "1304971316"
+

@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ *
+ * MultiLink Redirect Cached module for Drupal 7.
+ * Support: Commercial support and customization is available from www.netgenius.co.uk
+ * Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk
+ */
+
+
+/*
+ * Implements hook_boot().
+ * Redirection for cached pages.
+ */
+function multilink_redirect_cached_boot() {
+
+  // If the requested page is going to be served from cache...
+  if (drupal_page_get_cache(TRUE)) {
+    // Note, it's too late to stop the page being served unless we exit, e.g. via drupal_goto().
+
+    // Includes needed...
+    // We need locale and language functions, path and common are needed later for url().
+    $includes = array('locale', 'language', 'path', 'common');
+    foreach ($includes as $file) {
+      require_once(DRUPAL_ROOT . '/' . variable_get($file . '_inc', 'includes/' . $file . '.inc'));
+    }
+
+    // Load the minimum required MultiLink and Drupal code.
+    $needed = array('multilink', 'multilink_redirect', 'locale');
+    foreach ($needed as $module) {
+      drupal_load('module', $module);
+    }
+
+    $language_from_url = _multilink_redirect_cached_language_from_url();
+    // Set global language variables.
+    $GLOBALS['language'] = $GLOBALS['language_url'] = $GLOBALS['language_content'] = $language_from_url;
+
+    _multilink_redirect_main();
+  }
+}
+
+/*
+ * Implements hook_init().
+ */
+function multilink_redirect_cached_init() {
+  // If page is not cached, call _multilink_redirect_main() now.
+  // (otherwise it was already called by multilink_redirect_cached_boot() above.)
+  if (!drupal_page_get_cache(TRUE)) {
+    _multilink_redirect_main();
+  }
+}
+
+/*
+ * Get language from url, return language object.
+ */
+function _multilink_redirect_cached_language_from_url() {
+  // Due to an apparent bug somewhere in Drupal language processing,
+  // locale_language_from_url() doesn't work because it expects $_GET['q'] to
+  // include the language prefix, but the prefix has already been removed.
+  // As a work-around, temporarily set $_GET['q'] to request_path().
+  // This works because request_path() statically caches the original value.
+  // See: http://drupal.org/node/1286208
+  $languages = language_list();
+  $saveq = $_GET['q'];
+  $_GET['q'] = request_path();
+  $language_id = locale_language_from_url($languages);
+  $_GET['q'] = $saveq;
+
+  return $languages[$language_id];
+}
+
+// --- Drupal docs advise NOT closing PHP tags ---
