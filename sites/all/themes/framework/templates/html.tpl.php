@@ -9,6 +9,9 @@
   <meta name="viewport" content="width=device-width" />
   <title><?php print $head_title; ?></title>
   <?php print $styles; ?>
+  
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQncm49M3tEebHhB5mvoKkGrsuQXGvp6I&sensor=true"></script>
+  
   <?php print $scripts; ?>
   <!-- IE Fix for HTML5 Tags -->
   <!--[if lt IE 9]>

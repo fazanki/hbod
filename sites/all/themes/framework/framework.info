@@ -5,6 +5,10 @@ engine = phptemplate
 stylesheets[all][] = assets/css/style.css
 stylesheets[all][] = assets/css/page.css
 
+scripts[] = assets/js/hrbot.global.js
+scripts[] = assets/js/hrbot.sitewide.js
+
+
 regions[header]         = Header
 regions[navigation]     = Navigation
 regions[highlighted]    = Highlighted

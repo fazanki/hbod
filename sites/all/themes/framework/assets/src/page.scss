@@ -7,16 +7,8 @@
 // import mixin
 @import "mixin";
 
-
-.clearfix:before, 
-.clearfix:after { 
-    content: "\0020"; 
-    display: block; 
-    height: 0; 
-    overflow: hidden; 
-    }
-.clearfix:after { clear: both; }
-
+// inport header
+@import "header";
 
 body {
     
@@ -29,84 +21,71 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
+    background:#eff9f1;
    
-    
-    header {
-        #logo {
-            float:left;
+    #container { 
+        font-size:$body-font-size;
+        @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.40));
+        background:#fff;
+        padding:0px 0 0 0;
         
-            img {
-                width:100px;
-                @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
-            }
        
-        }
-        hgroup {
-           
-            h1 {
-    
-                 position:absolute;
-                 margin:115px 0 0 -10px;
-                 font-size:1em;
-                 -moz-transform:rotate(90deg);
-                 -moz-transform:rotate(90deg);
-                 -webkit-transform:rotate(90deg);
-                 -o-transform:rotate(90deg);
-                 -ms-transform:rotate(90deg);
-                 filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5);
-                a {
-                    color:$heading-color;
-                    font-size:inherit;
-                    text-decoration:none;
-                }
-            }
-        }
-        #block-views-slideshow-heading-block {
-            img {
-                @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
-            }
-            margin:50px 0 0 150px;
-            position:relative;
-            span {
-                 position:absolute;
-                 display:block;
-                 background:#fff;
-                 padding:3px 10px;
-                 text-transform:capitalize;
-            }
-            .slideShowTitle{
-                top:155px;
-                left:10px;
-                
-            }
-            
-            .slideShowCaption{
-                top:190px;
-                left:10px;
-                
-            }
+    }
+    nav.breadcrumb {
+        text-transform:uppercase;
+    }   
+    section#main{
+        padding:10px;
+        h1 {
+            font-size:1.5em;
+            color:$heading-color;
+            text-transform:uppercase;
+            font-weight:bold;
+            margin:10px 0px;
+            clear:both;
         }
     }
     
     #block-superfish-1 {
+        margin-left:5px;
+        ul.sf-menu {
+           > li.sfHover {
+               > ul {
+                    top:33px;
+                    left:-1px;
+                }
+            }
+        } 
         #superfish-1{
+            margin-top:20px;
+            li {
+               @include button(shiny, #d6efdc); 
+               @include border-radius(0px);
+               padding:0;
+               margin-right:1px;
+           }
+           
             a {
+                padding:10px 17px;
+                border:none;
+                margin:0;
                 font-size:0.75em;
-                background:$heading-color;
                 color:#000;
                 text-transform:uppercase;
                 &:hover {
-                    color:#f00;
+                    color:#900;
+                    background:none;
                 }
+                
             }
         }
     }
-    
+
     aside#sidebar-second{
         .sml-pix {
             img {
                 @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
-                @include border-radius(20px)
+                @include border-radius(5px)
             }
         }
     }
@@ -115,7 +94,8 @@ body {
 
 // dev default command:
 // use this one all the time to include burboun 
-// sass --watch -t expanded src/page.scss:css/page.css -r src/bourbon/lib/bourbon.rb
+// sass --watch -t expanded src:css -r src/bourbon/lib/bourbon.rb
+// sass --style compressed --watch src/page.scss:css/page.css -r src/bourbon/lib/bourbon.rb
 
 // sass --watch -t expanded src:css
 

@@ -27,8 +27,10 @@
     <?php endif; ?>
 
     <?php print render($page['header']); ?>
-
-    <?php if ($main_menu || $secondary_menu || !empty($page['navigation'])): ?>
+    
+  </header> <!-- /#header -->
+  <!-- navigation -->
+  <?php if ($main_menu || $secondary_menu || !empty($page['navigation'])): ?>
       <nav id="navigation" role="navigation" class="clearfix">
         <?php if (!empty($page['navigation'])): ?> <!--if block in navigation region, override $main_menu and $secondary_menu-->
           <?php print render($page['navigation']); ?>
@@ -60,11 +62,11 @@
           )); ?>
         <?php endif; ?>
       </nav> <!-- /#navigation -->
-    <?php endif; ?>
-    <?php if ($breadcrumb): print $breadcrumb; endif;?>
-  </header> <!-- /#header -->
-
+  <?php endif; ?> <!-- navigation end -->
+  
   <section id="main" role="main" class="clearfix">
+    <?php if ($breadcrumb): print $breadcrumb; endif;?>
+    
     <?php print $messages; ?>
     <a id="main-content"></a>
     <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>

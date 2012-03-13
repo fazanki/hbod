@@ -94,8 +94,6 @@ body.two-sidebars #main {
 
 body.sidebar-first #main {
   float: right;
-  margin: 0;
-  padding: 0;
   width: 700px;
 }
 
@@ -103,8 +101,7 @@ body.sidebar-first #main {
 
 body.sidebar-second #main {
   float: left;
-  margin: 0;
-  padding: 0;
+  
   width: 700px;
 }
 
@@ -205,11 +202,6 @@ body.sidebar-second #sidebar-second {
 #navigation ul#secondary-menu li a {
   display: block;
   padding: 0 2em 0 0;
-}
-
-.breadcrumb {
-  clear: both;
-  padding: 1.5em 0 0;
 }
 
 #skip-link {
@@ -374,9 +366,7 @@ ul.secondary a.active {
  * 9.BLOCKS
  */
 
-.block {
-  margin-bottom: 1.5em;
-}
+
 
 /**
  * 10.FOOTER

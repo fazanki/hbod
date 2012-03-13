@@ -8,7 +8,9 @@
  *
  * @see www.htmldog.com/articles/suckerfish
  */
-
+body #container {
+    margin-top:40px;
+}
 #admin-menu {
   background: #101010 url(images/bkg.png) bottom left repeat-x;
   font-size:15px;
