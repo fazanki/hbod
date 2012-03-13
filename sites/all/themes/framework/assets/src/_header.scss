@@ -1,0 +1,99 @@
+header {
+    @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.40));
+    #logo {
+        float:left;
+        margin:10px 0 0 10px; 
+        img {
+            width:100px;
+            @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+        }
+
+    }
+    
+    hgroup {
+        h1 {
+            float:left;
+            clear:left;
+            margin-top:10px;
+            
+            a {
+                color:$heading-color;
+                font-size:1.5em;
+                text-decoration:none;
+                display:block;
+                width:120px;
+                margin-left:10px;
+                line-height:1.3em;
+            }
+        }
+    }
+    section#block-locale-language {
+        float:left;
+        
+        ul, li {
+            padding:0;
+            margin:0;
+            list-style:none;
+        }
+        ul {
+            @include clearfix;
+            margin-top:15px;
+        }
+        li {
+            float:left;
+            margin-left:10px;
+            a {
+                text-indent:-9999px;
+                display:block;
+                width:25px;
+                height:14px;
+                background-image:url(../img/english.png);
+                background-repeat:none;
+            }
+        }
+        li.hr {
+            a {
+                background-position:0 -25px;
+                &:hover {
+                    background-position:-36px -25px;
+                }
+            }
+        }
+        
+        li.en {
+            a {
+                background-position:0 0;
+                &:hover {
+                   background-position:-36px 0; 
+                }   
+            }
+        }
+        
+    }
+    #block-views-slideshow-heading-block {
+        img {
+            @include box-shadow(0px 1px 8px 3px hsla(61, 5%, 51%, 0.60));
+        }
+        float:right;
+        margin-top:-125px;
+        position:relative;
+        span {
+             position:absolute;
+             display:block;
+             background:#fff;
+             padding:3px 10px;
+             text-transform:capitalize;
+        }
+        .slideShowTitle{
+            top:155px;
+            left:10px;
+        
+        }
+    
+        .slideShowCaption{
+            top:190px;
+            left:10px;
+        
+        }
+    }
+}
