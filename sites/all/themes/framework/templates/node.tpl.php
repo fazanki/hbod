@@ -16,7 +16,7 @@
       <?php print render($title_suffix); ?>
   
       <?php if (false
-          //$display_submitted
+         // $display_submitted
           ):?>
         <span class="submitted"><?php print $submitted; ?></span>
       <?php endif; ?>

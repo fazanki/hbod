@@ -13,6 +13,7 @@
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQncm49M3tEebHhB5mvoKkGrsuQXGvp6I&sensor=true"></script>
   
   <?php print $scripts; ?>
+  
   <!-- IE Fix for HTML5 Tags -->
   <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -25,4 +26,11 @@
   <?php print $page_bottom; ?>
 </body>
 
+    <script type="text/javascript">
+
+        if(HRBOT.Sitewide && HRBOT.Sitewide.Controller) {
+            HRBOT.Sitewide.Controller.init();
+        }
+    </script>
+    
 </html>
