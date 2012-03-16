@@ -87,12 +87,22 @@ HRBOT.Sitewide.View = (function($) {
                 $('.field-name-field-tab-link, .field-name-field-body-tab').find('.field-label').remove();
                 
                 // loop through the tab fiels and create tab links
+                var linksHtml = [];
+                var navHtml = "";
                 links.each(function(i){
                     var linkText = $(this).text();
-                    var linkHtml = (i == 0) ? '<a class="tabControl selected" href="tab'+i+'">'+linkText+'</a>' : '<a class="tabControl" href="tab'+i+'">'+linkText+'</a>';
-                    $(this).text('').append(linkHtml);
+                    var linkHtml = (i == 0) ? '<li><a class="tabControl selected" href="tab'+i+'">'+linkText+'</a></li>' : '<li><a class="tabControl" href="tab'+i+'">'+linkText+'</a></li>';
+                    linksHtml.push(linkHtml);
                 });
+                //remove all drupal structure rubish
+                $('.field-name-field-tab-link *').remove();
                 
+                // create new html for tabs
+                var navHtml = "";
+                $.each(linksHtml, function(i) {
+                    navHtml += linksHtml[i];
+                });
+                $('.field-name-field-tab-link').append($("<nav><ul>"+navHtml+"</ul></nav>"));
                 // loop through the tabs assign the id and hide all exept the first one
                 tabs.each(function(i){
                     $(this).attr('id', 'tab'+i);
@@ -105,7 +115,7 @@ HRBOT.Sitewide.View = (function($) {
                 $('.tabControl').bind('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    links.find('a').removeClass('selected');
+                    $('.field-name-field-tab-link').find('a').removeClass('selected');
                     $(this).addClass('selected');
                     var tabId = $(this).attr('href');
                     tabs.hide();

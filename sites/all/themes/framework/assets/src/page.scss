@@ -1,8 +1,8 @@
-// import BASE
-@import 'base';
-
 //import burbon 
 @import 'bourbon/bourbon';
+
+// import BASE
+@import 'base';
 
 // import mixin
 @import "mixin";
@@ -10,42 +10,43 @@
 // inport header
 @import "header";
 
+@import "section-main";
+
 body {
     
     @include clearfix;
     font-size:0.75em;
-    background: #fff;
     color: #222;
     font-family: $body-font;
     font-size: 100%;
     line-height: 1.5;
     margin: 0;
     padding: 0;
-    background:#eff9f1;
+    background:#abd9bc;
+    
+    div.bg-top {
+        background:url('../img/new-main-top-bg.png') 50% 0 no-repeat;
+    }
+    
+    div.bg-bottom {
+       background:url('../img/new-main-bottom-bg.png') 50% bottom no-repeat;
+    }
    
     #container { 
         font-size:$body-font-size;
         @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.40));
+        @include border-radius(5px);
         background:#fff;
         padding:0px 0 0 0;
         
-       
+        p {
+            margin:10px 0;
+        }
+        
     }
     nav.breadcrumb {
         text-transform:uppercase;
     }   
-    section#main{
-        padding:10px;
-        h1 {
-            font-size:1.5em;
-            color:$heading-color;
-            text-transform:uppercase;
-            font-weight:bold;
-            margin:10px 0px;
-            clear:both;
-        }
-    }
-    
     #block-superfish-1 {
         margin-left:5px;
         ul.sf-menu {
@@ -55,7 +56,8 @@ body {
                     left:-1px;
                 }
             }
-        } 
+        }
+         
         #superfish-1{
             margin-top:20px;
             li {

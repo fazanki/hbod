@@ -1,0 +1,8 @@
+@mixin headings-style ($font-size) {
+    font-size:$font-size;
+    color:$heading-color;
+    text-transform:uppercase;
+    font-weight:bold;
+    margin:10px 0px;
+    clear:both;
+}
