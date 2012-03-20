@@ -22,19 +22,12 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
-    background:#abd9bc;
+    background:url('../img/b2trees002.jpg') 50% top repeat;
     
-    div.bg-top {
-        background:url('../img/new-main-top-bg.png') 50% 0 no-repeat;
-    }
-    
-    div.bg-bottom {
-       background:url('../img/new-main-bottom-bg.png') 50% bottom no-repeat;
-    }
    
     #container { 
         font-size:$body-font-size;
-        @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.40));
+        @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.80));
         @include border-radius(5px);
         background:#fff;
         padding:0px 0 0 0;
@@ -68,7 +61,7 @@ body {
            }
            
             a {
-                padding:10px 16px;
+                padding:10px 18px 10px 19px;
                 border:none;
                 margin:0;
                 font-size:0.75em;

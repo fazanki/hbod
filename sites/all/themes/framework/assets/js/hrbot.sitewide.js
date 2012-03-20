@@ -115,7 +115,7 @@ HRBOT.Sitewide.View = (function($) {
                 $('.tabControl').bind('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    $('.field-name-field-tab-link').find('a').removeClass('selected');
+                    $(' .field-name-field-tab-link').find('a').removeClass('selected');
                     $(this).addClass('selected');
                     var tabId = $(this).attr('href');
                     tabs.hide();
@@ -221,7 +221,7 @@ HRBOT.Sitewide.Controller = (function($) {
 		},
 
 		bind: function bind() {
-			$('a.save').click(Event.saveClick);
+			//$('a.save').click(Event.saveClick);
 		}
 
 	};
