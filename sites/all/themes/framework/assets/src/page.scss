@@ -31,7 +31,8 @@ body {
         @include border-radius(5px);
         background:#fff;
         padding:0px 0 0 0;
-        
+        position:relative;
+        z-index:100;
         p {
             margin:10px 0;
         }
@@ -82,6 +83,45 @@ body {
                 @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
                 @include border-radius(5px)
             }
+        }
+    }
+    
+    footer#footer {
+        width:920px;
+        margin: auto;
+        padding:10px;
+        font-size:$body-font-size;
+        background: #d6efdc;
+        opacity:.85;
+        position:relative;
+        z-index:1;
+        margin-top:-5px;
+        @include clearfix;
+        padding:30px 10;
+        ul {
+            @include clearfix;
+            float:left;
+            list-style-type:none;
+            margin:15px 0;
+            li {
+                float:left;
+                list-style-image:none;
+                list-style-type:none;
+                margin-right:20px;
+                a {
+                    color:$heading-color;
+                    text-decoration:none;
+                    text-transform:uppercase;
+                    text-shadow: 2px 2px #FFF;
+                    &:hover{
+                        text-decoration:underline;
+                    }
+                }
+            }
+        }
+        p {
+            float:right;
+            margin-top:20px;
         }
     }
 }

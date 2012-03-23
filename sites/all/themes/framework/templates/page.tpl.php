@@ -91,10 +91,11 @@
     </aside>  <!-- /#sidebar-second -->
   <?php endif; ?>
 
-  <footer id="footer" role="contentinfo" class="clearfix">
-    <?php print render($page['footer']) ?>
-    <?php print $feed_icons ?>
-  </footer> <!-- /#footer -->
+  
 
 </div> <!-- /#container -->
 
+<footer id="footer" role="contentinfo" class="clearfix">
+    <?php print render($page['footer']) ?>
+    <?php print $feed_icons ?>
+</footer> <!-- /#footer -->

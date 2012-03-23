@@ -308,6 +308,8 @@ body #container {
   border-radius: 5px;
   background: #fff;
   padding: 0px 0 0 0;
+  position: relative;
+  z-index: 100;
 }
 body #container p {
   margin: 10px 0;
@@ -395,4 +397,56 @@ body aside#sidebar-second .sml-pix img {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
+}
+body footer#footer {
+  width: 920px;
+  margin: auto;
+  padding: 10px;
+  font-size: 0.75em;
+  background: #d6efdc;
+  opacity: .85;
+  position: relative;
+  z-index: 1;
+  margin-top: -5px;
+  zoom: 1;
+  padding: 30px 10;
+}
+body footer#footer:before, body footer#footer:after {
+  content: "";
+  display: table;
+}
+body footer#footer:after {
+  clear: both;
+}
+body footer#footer ul {
+  zoom: 1;
+  float: left;
+  list-style-type: none;
+  margin: 15px 0;
+}
+body footer#footer ul:before, body footer#footer ul:after {
+  content: "";
+  display: table;
+}
+body footer#footer ul:after {
+  clear: both;
+}
+body footer#footer ul li {
+  float: left;
+  list-style-image: none;
+  list-style-type: none;
+  margin-right: 20px;
+}
+body footer#footer ul li a {
+  color: #990000;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: 2px 2px #FFF;
+}
+body footer#footer ul li a:hover {
+  text-decoration: underline;
+}
+body footer#footer p {
+  float: right;
+  margin-top: 20px;
 }
