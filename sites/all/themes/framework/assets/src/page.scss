@@ -62,7 +62,7 @@ body {
            }
            
             a {
-                padding:10px 18px 10px 19px;
+                padding:10px 21px 10px 22px;
                 border:none;
                 margin:0;
                 font-size:0.75em;
@@ -81,13 +81,12 @@ body {
         .sml-pix {
             img {
                 @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
-                @include border-radius(5px)
             }
         }
     }
     
     footer#footer {
-        width:920px;
+        width:960px;
         margin: auto;
         padding:10px;
         font-size:$body-font-size;
