@@ -6,3 +6,28 @@
     margin:10px 0px;
     clear:both;
 }
+
+@mixin teaser-box {
+    @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+    border-top:1px solid #ccc;
+    border-left:1px solid #ccc;
+    padding:0px;
+}
+
+@mixin h2-teaser-box {
+    background:#d6efdc;
+    padding:5px;
+    text-transform:uppercase;
+    a {
+        color:$heading-color;
+        text-decoration:none !important;
+    }
+}
+
+@mixin border-radius-2($shadow) {
+    @if $shadow {
+        @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+    }
+    @include border-top-right-radius(10px);
+    @include border-bottom-left-radius(10px);
+}

@@ -1,35 +1,90 @@
-header {
+body.logged-in {
+    .leaf {
+        display:none;
+    }
+    .first.leaf, .last.leaf {
+        display:block;
+    }
+    
+    #footer {
+        li {
+            display:block !important;
+        }
+    }
+}
+
+header#header {
     @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.40));
+    background:$frame-bg-color;
     #logo {
-        float:left;
-        margin:10px 0 0 10px; 
+        position:absolute;
+        top:101px;
+        left:5px;
+        width:198px;
+        background:#fff;
+        @include border-radius-2(ture);
         img {
-            width:100px;
-            @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+           
+            @include border-bottom-left-radius(10px);
         }
 
     }
     
+    #block-system-user-menu {
+        position:absolute;
+        top:140px;
+        left:125px;
+        
+        ul {
+            li {
+                list-style-image:none;
+                list-style-type:none;
+                a {
+                    text-transform:uppercase;
+                    color:#999;
+                    text-decoration:none;
+                    font-size:.9em;
+                    &:hover{
+                        text-decoration:underline;
+                    }
+                }
+            }
+        }
+        section#block-user-login {
+            display:none;
+        }
+    }
+    
     hgroup {
+        position:absolute;
+        top:-6px;
+        left:-5px;
         h1 {
-            float:left;
-            clear:left;
+            
             margin-top:10px;
             
             a {
+                
                 color:$heading-color;
+                text-align:center;
                 font-size:1.5em;
                 text-decoration:none;
                 display:block;
-                width:120px;
+                width:195px;
                 margin-left:10px;
                 line-height:1.3em;
+                letter-spacing:.2em;
+                font-weight:bold;
+                background:#fff;
+                @include border-radius-2(ture);
+                padding:5px 0;
             }
         }
     }
     section#block-locale-language {
-        float:left;
-        
+        position:absolute;
+        top:94px;
+        left:115px;
         ul, li {
             padding:0;
             margin:0;
@@ -72,10 +127,10 @@ header {
     }
     #block-views-slideshow-heading-block {
         img {
-            @include box-shadow(0px 1px 8px 3px hsla(61, 5%, 51%, 0.60));
+           @include box-shadow(0px 0px 4px 3px hsla(61, 5%, 51%, 0.40));
         }
         float:right;
-        margin-top:-125px;
+       
         position:relative;
         span {
              position:absolute;

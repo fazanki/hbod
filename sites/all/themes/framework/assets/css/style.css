@@ -93,7 +93,6 @@ body.two-sidebars #main {
 
 body.sidebar-first #main {
   float: right;
-  width: 700px;
 }
 
 /* 2 columns: sidebar-second */
@@ -101,7 +100,7 @@ body.sidebar-first #main {
 body.sidebar-second #main {
   float: left;
   
-  width: 700px;
+  
 }
 
 /**

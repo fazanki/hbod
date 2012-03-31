@@ -12,6 +12,12 @@
 
 @import "section-main";
 
+body.sidebar-second {
+    section#main {
+        width:740px;
+    }
+}
+
 body {
     
     @include clearfix;
@@ -24,11 +30,21 @@ body {
     padding: 0;
     background:url('../img/b2trees002.jpg') 50% top repeat;
     
-   
+    div#header-ban {
+        position:absolute;
+        z-index:100;
+        top:0;
+        left:0;
+        height:339px;
+        width:100%;
+        background:$frame-bg-color;
+        opacity:0.5;
+        display:none;
+    }
     #container { 
         font-size:$body-font-size;
-        @include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.80));
-        @include border-radius(5px);
+        @include box-shadow(0px 0px 10px 3px hsla(120, 33%, 30%, 0.60));
+        @include border-bottom-radius(5px);
         background:#fff;
         padding:0px 0 0 0;
         position:relative;
@@ -40,6 +56,13 @@ body {
     }
     nav.breadcrumb {
         text-transform:uppercase;
+        a {
+            color:#990000;
+            text-decoration:none;
+            &:hover {
+                text-decoration:underline;
+            }
+        }
     }   
     #block-superfish-1 {
         margin-left:5px;
@@ -53,7 +76,7 @@ body {
         }
          
         #superfish-1{
-            margin-top:20px;
+            margin-top:10px;
             li {
                @include button(shiny, #d6efdc); 
                @include border-radius(0px);
@@ -76,11 +99,70 @@ body {
             }
         }
     }
-
-    aside#sidebar-second{
-        .sml-pix {
+    nav#navigation {
+       background:$frame-bg-color;
+       
+    }
+    aside#sidebar-second {
+        
+        #block-views-plant-gallery-block-1 {
+            @include border-radius-2(true);
+            @include border-bottom-left-radius(10px);
+            margin-top:10px;
+            position:relative;
+            padding-bottom:30px;
+            background:$frame-bg-color;
+            
+            .views-slideshow-controls-bottom {
+                position:absolute;
+                bottom:10px;
+                left:55px;
+                span {
+                    display:block;
+                    width:25px;
+                    height:25px;
+                    text-indent:-9999px;
+                    float:left;
+                    background:url('../img/nav-controls.png') no-repeat;
+                    margin-right:20px;
+                    &:hover{
+                        background-position:-28px 0px;
+                    }
+                }
+                .views-slideshow-controls-text-previous {
+                    background-position:0 -31px;
+                    &:hover{
+                        background-position:-28px -31px;
+                    }
+                }
+                
+                .views-slideshow-controls-text-pause {
+                    background-position:0 -95px;
+                    &:hover{
+                        background-position:-28px -95px;
+                    }
+                }
+            }
+            
+            p {
+                padding:10px;
+                margin:0;
+            }
+            h3, h4 {
+                position:absolute;
+                right:0px;
+                background:#fff;
+                padding:2px;
+            }
+            h3 {
+                top:235px;
+            }
+            
+            h4 {
+                top:265px;
+            }
             img {
-                @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.60));
+                @include border-radius-2(false);
             }
         }
     }
@@ -108,7 +190,7 @@ body {
                 list-style-type:none;
                 margin-right:20px;
                 a {
-                    color:$heading-color;
+                    color:#990000;
                     text-decoration:none;
                     text-transform:uppercase;
                     text-shadow: 2px 2px #FFF;
@@ -123,6 +205,7 @@ body {
             margin-top:20px;
         }
     }
+    
 }
 
 

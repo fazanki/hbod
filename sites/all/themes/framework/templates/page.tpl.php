@@ -1,3 +1,4 @@
+<div id="header-ban"></div>
 
 <div id="container" class="clearfix">
   <div id="skip-link">
@@ -6,7 +7,7 @@
       <a href="#navigation" class="element-invisible element-focusable"><?php print t('Skip to navigation'); ?></a>
     <?php endif; ?>
   </div>
-
+  
   <header id="header" role="banner" class="clearfix">
 	<?php if ($logo): ?>
       <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" id="logo">
