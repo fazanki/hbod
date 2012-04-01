@@ -21,7 +21,7 @@ header#header {
         top:101px;
         left:5px;
         width:198px;
-        background:#fff;
+        background:#f7fbff;
         @include border-radius-2(ture);
         img {
            
@@ -62,7 +62,7 @@ header#header {
         h1 {
             
             margin-top:10px;
-            
+           
             a {
                 
                 color:$heading-color;
@@ -75,7 +75,7 @@ header#header {
                 line-height:1.3em;
                 letter-spacing:.2em;
                 font-weight:bold;
-                background:#fff;
+                background:#f7fbff;
                 @include border-radius-2(ture);
                 padding:5px 0;
             }

@@ -128,13 +128,18 @@ HRBOT.Sitewide.View = (function($) {
             
 		},
 
-		updateDOM3: function updateDOM3() {
-
+		// hit area ON
+		expandHitAreaOn: function expandHitAreaOn (){
+		    $(this).css({
+		        //'background':'#f0f0f0',
+		        'cursor':'pointer'
+		            })
+		    $(this).addClass('graditent');	
 		},
-
-		fixIE6Please: function fixIE6Please() {
-
-		}
+		// hit area off
+		expandHitAreaOff: function expandHitAreaOff (){
+		    $(this).removeClass('graditent')
+		},
 
 	}
 
@@ -219,9 +224,19 @@ HRBOT.Sitewide.Controller = (function($) {
 			}
 
 		},
+		
+		expandHitAreaClick: function expandHitAreaClick () {
+		   var hitlink = $(this).find('.node-readmore a').attr('href')
+		   window.location = hitlink;
+		},
+		
 
 		bind: function bind() {
-			//$('a.save').click(Event.saveClick);
+			$('article.node').hover(
+			    View.expandHitAreaOn,
+			    View.expandHitAreaOff
+			).bind('click', Event.expandHitAreaClick);
+			
 		}
 
 	};

@@ -15,7 +15,8 @@
 }
 
 @mixin h2-teaser-box {
-    background:#d6efdc;
+    //background:#d6efdc;
+    @include linear-gradient(left, #e1fae7, #c8e3ce);
     padding:5px;
     text-transform:uppercase;
     a {
