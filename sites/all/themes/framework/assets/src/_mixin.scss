@@ -5,6 +5,9 @@
     font-weight:bold;
     margin:10px 0px;
     clear:both;
+    border-bottom:1px solid $heading-color;
+    border-top:1px solid $heading-color;
+     @include linear-gradient(left, #fff, $heading-color);
 }
 
 @mixin teaser-box {

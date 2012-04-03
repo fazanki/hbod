@@ -56,6 +56,10 @@ body {
     }
     nav.breadcrumb {
         text-transform:uppercase;
+        border-top:1px solid #dae6f5;
+        padding:4px 10px;
+        @include linear-gradient(bottom, #dae6f5, #fff);
+        @include border-radius(20px);
         a {
             color:#990000;
             text-decoration:none;
