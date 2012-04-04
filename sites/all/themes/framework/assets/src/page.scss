@@ -231,7 +231,7 @@ body {
 // dev default command:
 // use this one all the time to include burboun 
 // sass --watch -t expanded src:css -r src/bourbon/lib/bourbon.rb
-// sass --style compressed --watch src/page.scss:css/page.css -r src/bourbon/lib/bourbon.rb
+// sass --style compressed --watch src:css/ -r src/bourbon/lib/bourbon.rb
 
 // sass --watch -t expanded src:css
 
