@@ -3,11 +3,14 @@
     color:$heading-color;
     text-transform:uppercase;
     font-weight:bold;
-    margin:10px 0px;
+    margin:10px 0px 0 0 ;
     clear:both;
-    border-bottom:1px solid $heading-color;
     border-top:1px solid $heading-color;
-     @include linear-gradient(left, #fff, $heading-color);
+    border-left:1px solid $heading-color;
+    @include linear-gradient(left, #fff, $heading-color);
+    @include border-top-right-radius(10px);
+    padding-left:10px;
+    @include box-shadow(2px 2px 4px 1px hsla(61, 5%, 51%, 0.40));
 }
 
 @mixin teaser-box {
@@ -20,6 +23,7 @@
 @mixin h2-teaser-box {
     //background:#d6efdc;
     @include linear-gradient(left, #e1fae7, #c8e3ce);
+    @include border-top-right-radius(10px);
     padding:5px;
     text-transform:uppercase;
     a {
@@ -30,7 +34,7 @@
 
 @mixin border-radius-2($shadow) {
     @if $shadow {
-        @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+        @include box-shadow(1px 1px 4px 1px hsla(61, 5%, 51%, 0.40));
     }
     @include border-top-right-radius(10px);
     @include border-bottom-left-radius(10px);

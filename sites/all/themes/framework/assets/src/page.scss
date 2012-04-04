@@ -19,7 +19,6 @@ body.sidebar-second {
 }
 
 body {
-    
     @include clearfix;
     font-size:0.75em;
     color: #222;
@@ -30,15 +29,31 @@ body {
     padding: 0;
     background:url('../img/b2trees002.jpg') 50% top repeat;
     
+    // edit links
+    .tabs-wrapper {
+        padding-top:10px;
+        border-left:1px solid $heading-color;
+        border-bottom:0;
+        border-right:1px solid $heading-color;
+        margin-bottom:0;
+        @include box-shadow(2px 2px 4px 1px hsla(61, 5%, 51%, 0.40));
+        li {
+            a {
+                color:#990000;
+                
+            }
+        }
+    } 
+    
     div#header-ban {
         position:absolute;
         z-index:100;
         top:0;
         left:0;
-        height:339px;
+        height:331px;
         width:100%;
         background:$frame-bg-color;
-        opacity:0.5;
+        opacity:0.8;
         display:none;
     }
     #container { 
@@ -57,9 +72,9 @@ body {
     nav.breadcrumb {
         text-transform:uppercase;
         border-top:1px solid #dae6f5;
+        border-bottom:1px solid #dae6f5;
         padding:4px 10px;
-        @include linear-gradient(bottom, #dae6f5, #fff);
-        @include border-radius(20px);
+        @include linear-gradient(left, #dae6f5, #fff);
         a {
             color:#990000;
             text-decoration:none;

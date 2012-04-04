@@ -66,16 +66,16 @@ HRBOT.Sitewide.View = (function($) {
 
 		createGoogleMap: function createGoogleMap () {
 		    
-            var myLatlng = new google.maps.LatLng(45.819229,15.975151);
+            var myLatlng = new google.maps.LatLng(45.80714,15.96926);
             var myOptions = {
-                zoom: 15,
+                zoom: 16,
                 center: myLatlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
                 }
             var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
             var marker = new google.maps.Marker({ position: myLatlng, map: map, title:"Hello World!"});
             google.maps.event.addListener(marker, 'click', function() {map.setZoom(8);});
-            $('#map_canvas').css({"width":"700px","height":"300px"});
+            $('#map_canvas').css({"width":"720px","height":"300px"});
 		},
 
 		createTabs: function createTabs() {
