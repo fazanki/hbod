@@ -44,6 +44,7 @@ header#header {
                     text-decoration:none;
                     font-size:1em;
                     font-weight:bold;
+                    text-shadow: 1px 1px #990000;
                     &:hover{
                         text-decoration:underline;
                     }
@@ -69,6 +70,7 @@ header#header {
                 letter-spacing:.2em;
                 font-weight:bold;
                 @include linear-gradient(left, #fff, $heading-color);
+                text-shadow: 1px 1px #990000;
                 padding:7px;
             }
         }
