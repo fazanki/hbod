@@ -39,3 +39,10 @@
     @include border-top-right-radius(10px);
     @include border-bottom-left-radius(10px);
 }
+
+@mixin text-input {
+    @include border-radius(20px);
+    border:1px solid $heading-color;
+    @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+    padding:5px;
+}

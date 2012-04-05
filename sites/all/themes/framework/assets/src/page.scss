@@ -10,7 +10,11 @@
 // inport header
 @import "header";
 
+// import main section accross the main pages
 @import "section-main";
+
+// import serach page
+@import "search-page";
 
 body.sidebar-second {
     section#main {
@@ -73,7 +77,7 @@ body {
         text-transform:uppercase;
         border-top:1px solid #dae6f5;
         border-bottom:1px solid #dae6f5;
-        padding:4px 10px;
+        padding:6px 10px;
         @include linear-gradient(left, #dae6f5, #fff);
         a {
             color:#990000;
@@ -82,7 +86,28 @@ body {
                 text-decoration:underline;
             }
         }
-    }   
+    }
+    
+    #block-search-form {
+        border-top:1px solid #dae6f5;
+        border-bottom:1px solid #dae6f5;
+        @include linear-gradient(right, #dae6f5, #fff);
+        margin-top:10px;
+        padding:3px 0 2px 0;
+        
+        input[type='submit'] {
+            @include button(pill, #c1d9f5); 
+            text-transform:uppercase;
+        }
+        input[type='search'] {
+            border:none;
+            border:1px solid #199b44 !important;
+            @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
+            width:132px;
+           
+        }
+    }
+       
     #block-superfish-1 {
         margin-left:5px;
         ul.sf-menu {
