@@ -71,7 +71,7 @@ header#header {
                 letter-spacing:.2em;
                 font-weight:bold;
                 @include linear-gradient(left, #fff, $heading-color);
-                text-shadow: 1px 1px #990000;
+                text-shadow: 1px 1px #000;
                 padding:7px;
             }
         }

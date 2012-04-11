@@ -22,7 +22,7 @@ body.sidebar-second {
     }
 }
 
-body {
+body.html {
     @include clearfix;
     font-size:0.75em;
     color: #222;
@@ -32,6 +32,11 @@ body {
     margin: 0;
     padding: 0;
     background:url('../img/b2trees002.jpg') 50% top repeat;
+    
+    
+    iframe html body {
+        background:none !important;
+    }
     
     // edit links
     .tabs-wrapper {
