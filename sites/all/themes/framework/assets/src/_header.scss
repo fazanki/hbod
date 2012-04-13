@@ -16,7 +16,7 @@ body.logged-in {
 header#header {
     //@include box-shadow(0px 0px 15px 3px hsla(61, 5%, 51%, 0.40));
     background:$frame-bg-color;
-    
+    height:291px;
     #logo {
         position:absolute;
         top:38px;

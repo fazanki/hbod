@@ -122,11 +122,11 @@ body.html {
     }
        
     #block-superfish-1 {
-        margin-left:5px;
+        //margin-left:5px;
         ul.sf-menu {
            > li.sfHover {
                > ul {
-                    top:33px;
+                    top:32px;
                     left:-1px;
                 }
             }
@@ -159,7 +159,11 @@ body.html {
     nav#navigation {
        background:$frame-bg-color;
        border-bottom:1px solid #ccc;
-       
+       position:absolute;
+       left:0;
+       top:235px;
+       width:auto;
+       padding-left:5px;
     }
     aside#sidebar-second {
         
