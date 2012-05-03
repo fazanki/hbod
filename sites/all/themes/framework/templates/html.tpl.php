@@ -10,8 +10,8 @@
   <title><?php print $head_title; ?></title>
   <?php print $styles; ?>
   
-  <!-- script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQncm49M3tEebHhB5mvoKkGrsuQXGvp6I&sensor=true"></script -->
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAcbGw6tIxpDfHriEgWGQ6RT8voxW_UGhM&sensor=true"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCDHoUUHq9l6fQhUEyxYveS2SLvIetA8Jk&sensor=true"></script>
+  <!-- script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAcbGw6tIxpDfHriEgWGQ6RT8voxW_UGhM&sensor=true"></script -->
   
   <?php print $scripts; ?>
   
