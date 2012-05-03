@@ -26,7 +26,7 @@
   <?php print $page_bottom; ?>
 </body>
   <!-- script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCDHoUUHq9l6fQhUEyxYveS2SLvIetA8Jk&sensor=true"></script -->
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAcbGw6tIxpDfHriEgWGQ6RT8voxW_UGhM&sensor=true"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
     <script type="text/javascript">
 
         if(HRBOT.Sitewide && HRBOT.Sitewide.Controller) {
