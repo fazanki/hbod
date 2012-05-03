@@ -11,7 +11,7 @@
   <?php print $styles; ?>
   
   <!-- script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQncm49M3tEebHhB5mvoKkGrsuQXGvp6I&sensor=true"></script -->
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCz-mVa8Oh2FYzMv_wkl5nR9PwjPG4H-Tw&sensor=false&callback=initialize"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAcbGw6tIxpDfHriEgWGQ6RT8voxW_UGhM&sensor=true"></script>
   
   <?php print $scripts; ?>
   
