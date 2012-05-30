@@ -21,7 +21,6 @@ body.toolbar-drawer {
   padding: 0;
   text-align: left; /* LTR */
   vertical-align: baseline;
-  display:none;
 }
 
 /**

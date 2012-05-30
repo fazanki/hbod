@@ -63,7 +63,6 @@ HRBOT.Sitewide.Model = (function($) {
 HRBOT.Sitewide.View = (function($) {
 
 	var View = {
-
 		createGoogleMap: function createGoogleMap () {
 		    
             var myLatlng = new google.maps.LatLng(45.80714,15.96926);
@@ -247,9 +246,11 @@ HRBOT.Sitewide.Controller = (function($) {
 	return {
 
 		init: function init() {
-            Event.callGoogleMap();
-            Event.createTabs()
+      Event.callGoogleMap();
+      Event.createTabs()
 			Event.bind();
+			
+			
 
 			// execute any View functions needed on page load.
 
