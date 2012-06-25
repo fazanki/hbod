@@ -230,6 +230,40 @@ body.html {
                 @include border-radius-2(false);
             }
         }
+        
+        #block-views-dogadanja-activnosti-block {
+            margin-top:20px;
+           
+            @include border-radius-2(true);
+            border:1px solid $heading-color;
+            margin-bottom:20px;
+            
+            h2 {
+              font-weight:bold;
+              color:$heading-color;
+              margin:0;
+              padding:7px 5px;
+              border-bottom:1px solid  $heading-color;
+            }
+            
+            h3{
+              padding:5px;
+              a {
+                text-transform:uppercase;
+                color:#990000;
+                text-decoration:none;
+              }
+            } 
+            
+            ul {
+              list-style:none;
+              padding:0;
+              margin:0;
+              li {
+                border-bottom:1px solid #ccc;
+              }
+            }
+        }
     }
     
     footer#footer {
