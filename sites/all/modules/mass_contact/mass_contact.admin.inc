@@ -481,12 +481,12 @@ function mass_contact_admin_settings_body($form, $form_state) {
       $suffix_format = !empty($mass_contact_message_suffix['format']) ? $mass_contact_message_suffix['format'] : NULL;
 
       if ($token) {
-        $prefix_default_value = !empty($mass_contact_message_prefix['value']) ? $mass_contact_message_prefix['value'] : t('[current-user:name] has sent you a group email from [site:name].');
-        $suffix_default_value = !empty($mass_contact_message_suffix['value']) ? $mass_contact_message_suffix['value'] : '';
+        $prefix_default_value = isset($mass_contact_message_prefix['value']) ? $mass_contact_message_prefix['value'] : t('[current-user:name] has sent you a group email from [site:name].');
+        $suffix_default_value = isset($mass_contact_message_suffix['value']) ? $mass_contact_message_suffix['value'] : '';
       }
       else {
-        $prefix_default_value = !empty($mass_contact_message_prefix['value']) ? $mass_contact_message_prefix['value'] : t('You were sent a group email from @site.', array('@site' => url(NULL, array('absolute' => TRUE))));
-        $suffix_default_value = !empty($mass_contact_message_suffix['value']) ? $mass_contact_message_suffix['value'] : '';
+        $prefix_default_value = isset($mass_contact_message_prefix['value']) ? $mass_contact_message_prefix['value'] : t('You were sent a group email from @site.', array('@site' => url(NULL, array('absolute' => TRUE))));
+        $suffix_default_value = isset($mass_contact_message_suffix['value']) ? $mass_contact_message_suffix['value'] : '';
       }
     }
     else {
@@ -494,12 +494,12 @@ function mass_contact_admin_settings_body($form, $form_state) {
       $suffix_format = !empty($mass_contact_message_suffix) ? $mass_contact_message_suffix : NULL;
 
       if ($token) {
-        $prefix_default_value = !empty($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('[current-user:name] has sent you a group email from [site:name].');
-        $suffix_default_value = !empty($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
+        $prefix_default_value = isset($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('[current-user:name] has sent you a group email from [site:name].');
+        $suffix_default_value = isset($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
       }
       else {
-        $prefix_default_value = !empty($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('You were sent a group email from @site.', array('@site' => url(NULL, array('absolute' => TRUE))));
-        $suffix_default_value = !empty($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
+        $prefix_default_value = isset($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('You were sent a group email from @site.', array('@site' => url(NULL, array('absolute' => TRUE))));
+        $suffix_default_value = isset($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
       }
     }
   }
@@ -509,12 +509,12 @@ function mass_contact_admin_settings_body($form, $form_state) {
     $suffix_format = NULL;
 
     if ($token) {
-      $prefix_default_value = !empty($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('[current-user:name] has sent you a group email from [site:name].');
-      $suffix_default_value = !empty($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
+      $prefix_default_value = isset($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('[current-user:name] has sent you a group email from [site:name].');
+      $suffix_default_value = isset($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
     }
     else {
-      $prefix_default_value = !empty($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('You were sent a group email from @site.', array('@site' => url(NULL, array('absolute' => TRUE))));
-      $suffix_default_value = !empty($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
+      $prefix_default_value = isset($mass_contact_message_prefix) ? $mass_contact_message_prefix : t('You were sent a group email from @site.', array('@site' => url(NULL, array('absolute' => TRUE))));
+      $suffix_default_value = isset($mass_contact_message_suffix) ? $mass_contact_message_suffix : '';
     }
   }
 

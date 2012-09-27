@@ -69,7 +69,7 @@ Drupal.toolbar.expand = function() {
     .addClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height()-30);
+  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     0,

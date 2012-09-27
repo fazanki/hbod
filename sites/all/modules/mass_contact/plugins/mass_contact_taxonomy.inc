@@ -120,10 +120,12 @@ function mass_contact_taxonomy_admin_edit($recipients) {
  * @return bool
  */
 function mass_contact_taxonomy_admin_edit_validate($form, &$form_state) {
-  foreach ($form_state['values']['recipients']['mass_contact_taxonomy'] as $term_values) {
-    $term_values_filtered = array_filter($term_values);
-    if (!empty($term_values_filtered)) {
-      return FALSE;
+  if (!empty($form_state['values']['recipients']['mass_contact_taxonomy'])) {
+    foreach ($form_state['values']['recipients']['mass_contact_taxonomy'] as $term_values) {
+      $term_values_filtered = array_filter($term_values);
+      if (!empty($term_values_filtered)) {
+        return FALSE;
+      }
     }
   }
   return TRUE;
@@ -138,8 +140,10 @@ function mass_contact_taxonomy_admin_edit_validate($form, &$form_state) {
  */
 function mass_contact_taxonomy_admin_edit_submit($form, &$form_state) {
   $terms = array();
-  foreach ($form_state['values']['recipients']['mass_contact_taxonomy'] as $term_values) {
-    $terms += array_filter($term_values);
+  if (!empty($form_state['values']['recipients']['mass_contact_taxonomy'])) {
+    foreach ($form_state['values']['recipients']['mass_contact_taxonomy'] as $term_values) {
+      $terms += array_filter($term_values);
+    }
   }
   return $terms;
 }

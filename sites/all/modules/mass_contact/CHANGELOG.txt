@@ -1,3 +1,24 @@
+2012-09-05 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Added extra permissions checks.
+
+2012-02-02 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Made it possible for anonymous users to use this module, per chaloalvarezj
+      at http://drupal.org/node/1446506.
+    * Removed e-mail addresses from status messages.
+
+2012-02-02 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Fixed a form field being overwritten by another field of the same name,
+      per mjorlitzky at http://drupal.org/node/1423224.
+  * mass_contact.admin.inc:
+    * Fixed the situation where the admin could not set the prefix to be blank,
+      per mjorlitzky at http://drupal.org/node/1423306.
+  * plugins/mass_contact_taxonomy.inc:
+    * Added a check for an empty variable, per floeschie at
+      http://drupal.org/node/1425678.
+
 2011-12-28 Jason Flatt drupal@oadaeh.net
   * mass_contact.page.inc:
     * Fix problem where selecting authenticated users role resulted in no users

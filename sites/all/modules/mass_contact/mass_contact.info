@@ -9,9 +9,9 @@ configure = admin/config/system/mass_contact
 
 dependencies[] = ctools
 
-; Information added by drupal.org packaging script on 2012-01-24
-version = "7.x-1.0-alpha5"
+; Information added by drupal.org packaging script on 2012-09-12
+version = "7.x-1.0-alpha6"
 core = "7.x"
 project = "mass_contact"
-datestamp = "1327370753"
+datestamp = "1347478435"
 

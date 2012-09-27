@@ -69,7 +69,7 @@ function mass_contact_mail_page($form, $form_state) {
   }
 
   if (count($categories) > 0) {
-    $form['#token'] = $user->name . $user->mail;
+//    $form['#token'] = $user->name . $user->mail;
     $form['contact_information'] = array(
       '#markup' => filter_xss_admin(variable_get('mass_contact_form_information', t('Send an email message using the contact form below.'))),
     );
@@ -230,28 +230,7 @@ function mass_contact_mail_page($form, $form_state) {
     // Get the HTML input format setting and the corresponding name.
     if (module_exists('mimemail')) {
       // Get the admin specified default text format.
-      $specified_filter_format = variable_get('mass_contact_html_format', filter_default_format($user));
-
-      // The admin has not specified one, there wou'nt be a match for the
-      // default.
-      if (!empty($specified_filter_format)) {
-        // Get all the text formats the user is allowed access to.
-        $filter_formats = filter_formats($user);
-        // Cycle through the list of possible text formats.
-        foreach ($filter_formats as $filter_format) {
-          // If the current filter format matches the admin specified one...
-          if ($filter_format->format == $specified_filter_format['format'] || $filter_format->format == $specified_filter_format) {
-            // ...save it for later use.
-            $default_filter_format = $filter_format;
-          }
-        }
-      }
-
-      // If nothing was selected above, set the default to the Drupal system
-      // default.
-      if (empty($default_filter_format)) {
-        $default_filter_format = $filter_formats[filter_fallback_format()];
-      }
+      $default_filter_format = _mass_contact_compute_default_filter_format();
 
       // Check if the user is allowed to override the text format.
       if (user_access('mass contact override text format')) {
@@ -348,7 +327,7 @@ function mass_contact_mail_page($form, $form_state) {
           '#type' => 'hidden',
           '#default_value' => variable_get('mass_contact_nodecc_d', 1),
         );
-        $form['nodecc'] = array(
+        $form['nodecc_notice'] = array(
           '#type' => 'item',
           '#title' => t('Archive a copy of this message on this website'),
           '#markup' => t('A copy of this message will !not be archived on this website.', array('!not' => variable_get('mass_contact_nodecc_d', 1) ? '' : 'not')),
@@ -361,7 +340,7 @@ function mass_contact_mail_page($form, $form_state) {
         '#type' => 'hidden',
         '#default_value' => variable_get('mass_contact_nodecc_d', 1),
       );
-      $form['nodecc'] = array(
+      $form['nodecc_notice'] = array(
         '#type' => 'item',
         '#title' => t('Archive a copy of this message on this website'),
         '#markup' => t('A copy of this message will !not be archived on this website.', array('!not' => variable_get('mass_contact_nodecc_d', 1) ? '' : 'not')),
@@ -433,13 +412,34 @@ function mass_contact_mail_page_validate($form, &$form_state) {
 function mass_contact_mail_page_submit($form, &$form_state) {
   // Initialize some variables.
   $params = array();
-  $bcc = $form_state['values']['bcc'];
-  $nodecc = $form_state['values']['nodecc'];
   $message = '';
   $send_error = 0;
   $recipient_lists = array();
   $empty_lists = 0;
 
+  $bcc = variable_get('mass_contact_bcc_d', 1);
+  if (user_access('mass contact override bcc')) {
+    $bcc = $form_state['values']['bcc'];
+  }
+
+  $nodecc = variable_get('mass_contact_nodecc_d', 1);
+  if (user_access('mass contact archive messages') && user_access('mass contact override archiving')) {
+    // Only set $nodecc if the user is allowed to archive messages AND
+    // override the archive setting.
+    $nodecc = $form_state['values']['nodecc'];
+  }
+
+  $format = _mass_contact_compute_default_filter_format();
+  if (user_access('mass contact override text format')) {
+    // Allow the form data to determine the message format if our user
+    // has the appropriate permissions.
+    if (is_array($form_state['values']['message'])) {
+      $format = $form_state['values']['message']['format'];
+    }
+    else {
+      $format = $form_state['values']['body_filter_format']->format;
+    }
+  }
 
   // Process some parts the message header (more will be processed later).
 
@@ -448,26 +448,29 @@ function mass_contact_mail_page_submit($form, &$form_state) {
 
   // Specify the sender's name.
   $default_sender_name = variable_get('mass_contact_default_sender_name');
-  if (!empty($form_state['values']['name'])) {
-    $from_name = $form_state['values']['name'];
-  }
-  elseif (!empty($default_sender_name)) {
+  $from_name = variable_get('site_name');
+  if (!empty($default_sender_name)) {
     $from_name = $default_sender_name;
-  }
-  else {
-    $from_name = variable_get('site_name');
   }
 
   // Specify the sender's email address.
   $default_sender_email = variable_get('mass_contact_default_sender_email');
-  if (!empty($form_state['values']['mail'])) {
-    $from_email = $form_state['values']['mail'];
-  }
-  elseif (!empty($default_sender_email)) {
+  $from_email = variable_get('site_mail');
+  if (!empty($default_sender_email)) {
     $from_email = $default_sender_email;
   }
-  else {
-    $from_email = variable_get('site_mail');
+
+  if (user_access('mass contact change default sender information')) {
+    // User is allowed to change the default from address and name,
+    // so we check the form for submitted values.
+
+    if (isset($form_state['values']['name']) && !empty($form_state['values']['name'])) {
+      $from_name = $form_state['values']['name'];
+    }
+
+    if (isset($form_state['values']['mail']) && !empty($form_state['values']['mail'])) {
+      $from_email = $form_state['values']['mail'];
+    }
   }
 
 
@@ -482,12 +485,14 @@ function mass_contact_mail_page_submit($form, &$form_state) {
     $node_message = $message;
   }
 
-  // If there are attachments, add them.
-  if (module_exists('mimemail')) {
-    for ($i = 1; $i <= variable_get('mass_contact_number_of_attachments', '3'); $i++) {
-      if (!empty($_FILES['files']['size']['attachment_' . $i])) {
-        $params['attachments'] = _mass_contact_process_mime_mail_attachments($nodecc);
-        break;
+  // If there are attachments, and the user is allowed, add them.
+  if (user_access('mass contact include attachments')) {
+    if (module_exists('mimemail')) {
+      for ($i = 1; $i <= variable_get('mass_contact_number_of_attachments', '3'); $i++) {
+        if (!empty($_FILES['files']['size']['attachment_' . $i])) {
+          $params['attachments'] = _mass_contact_process_mime_mail_attachments($nodecc);
+          break;
+        }
       }
     }
   }
@@ -505,10 +510,16 @@ function mass_contact_mail_page_submit($form, &$form_state) {
   }
 
   // Get the category objects, based on the IDs, and save them into an array
-  // for latter use.
+  // for later use.
   $results = db_query("SELECT * FROM {mass_contact} WHERE cid IN(:cids)", array(':cids' => $cids));
   foreach ($results as $category) {
-    $categories[] = $category;
+    $permission  = 'mass contact send to users in the ';
+    $permission .= $category->category;
+    $permission .= ' category';
+    if (user_access($permission)) {
+      // Only allow categories the user has permission to send to.
+      $categories[] = $category;
+    }
   }
 
   // Create the recipient lists, based on category.
@@ -651,12 +662,7 @@ function mass_contact_mail_page_submit($form, &$form_state) {
 
         // Archive the message as a node.
         if ($nodecc) {
-          if (is_array($form_state['values']['message'])) {
-            _mass_contact_save_node($params, $node_message, $form_state['values']['message']['format'], $from_email, $category, $to, !$send_error);
-          }
-          else {
-            _mass_contact_save_node($params, $node_message, $form_state['values']['body_filter_format']->format, $from_email, $category, $to, !$send_error);
-          }
+          _mass_contact_save_node($params, $node_message, $format, $from_email, $category, $to, !$send_error);
         }
       }
     }
@@ -664,7 +670,7 @@ function mass_contact_mail_page_submit($form, &$form_state) {
     // If there were no errors, do the final operations.
     if (!$send_error) {
       // If the sender requested a copy, send it.
-      if ($form_state['values']['copy'] && !$bcc) {
+      if (!empty($form_state['values']['copy']) && !$bcc) {
         if (!_mass_contact_send_message('user-copy', $from_email, $params, $from_email, 'A copy was sent to you.')) {
           // There was an error, so inform the user.
           if (!module_exists('help')) {
@@ -689,10 +695,10 @@ function mass_contact_mail_page_submit($form, &$form_state) {
 
       // Print out the final results of the complete operation.
       if ($total_recipients == $unique_addresses_count) {
-        drupal_set_message(t('Your message was successfully sent to a total of @total email addresses: @emails', array('@total' =>  $total_recipients, '@emails' => $listed_recipients)));
+        drupal_set_message(t('Your message was successfully sent to a total of @total email addresses.', array('@total' =>  $total_recipients)));
       }
       else {
-        drupal_set_message(t('Your message was successfully sent to a total of @total email addresses, of which, there may have been !dups duplicates: @emails', array('@total' =>  $total_recipients, '!dups' => $total_recipients - $unique_addresses_count, '@emails' => $listed_recipients)));
+        drupal_set_message(t('Your message was successfully sent to a total of @total email addresses, of which, there may have been !dups duplicates.', array('@total' =>  $total_recipients, '!dups' => $total_recipients - $unique_addresses_count)));
       }
     }
     else {
@@ -717,6 +723,39 @@ function mass_contact_mail_page_submit($form, &$form_state) {
  * Private helper functions.
  *
  * ************************/
+
+
+/**
+ * Figures out the default filter format for the current user.
+ *
+ * @return
+ *   Either the user's selected format, the admin-specified one, or the
+ *   system default depending on which of those the user is allowed to use.
+ */
+function _mass_contact_compute_default_filter_format() {
+  global $user;
+
+  $user_default = filter_default_format($user);
+  $specified_filter_format = variable_get('mass_contact_html_format', $user_default);
+
+  // The admin has not specified one, there wouldn't be a match for the
+  // default.
+  if (!empty($specified_filter_format)) {
+    // Get all the text formats the user is allowed access to.
+    $filter_formats = filter_formats($user);
+    // Cycle through the list of possible text formats.
+    foreach ($filter_formats as $filter_format) {
+      // If the current filter format matches the admin specified one...
+      if ($filter_format->format == $specified_filter_format['format'] || $filter_format->format == $specified_filter_format) {
+        return $filter_format;
+      }
+    }
+  }
+
+  // If nothing was selected above, set the default to the Drupal system
+  // default.
+  return $filter_formats[filter_fallback_format()];
+}
 
 
 /**
@@ -1039,7 +1078,7 @@ function _mass_contact_create_recipient_list($category, $respect_opt_outs) {
 
     // Check if this account is the current user. We don't include the user
     // unless requested, and then it's a separate mailing.
-    if ($account->name != $user->name) {
+    if (empty($user->name) || ($account->name != $user->name)) {
       // Check to see if users may opt out of all mailings.
       if ($respect_opt_outs && $opt_out_setting == 1) {
         // Check to see if this account has opted out.
@@ -1134,7 +1173,7 @@ function _mass_contact_send_message($message_key, $to, &$params, $from_email, $s
   $success = drupal_mail('mass_contact', $message_key, $to, language_default(), $params, $from_email);
 
   if ($success['result']) {
-    drupal_set_message(t($success_message . ' (To: @emails.)', array('@emails' => (isset($params['headers']['Bcc'])) ? $params['headers']['Bcc'] : $to)));
+    drupal_set_message(t($success_message));
   }
 
   return $success['result'];
