@@ -369,9 +369,9 @@ section#main > .content {
   -ms-border-bottom-left-radius: 10px;
   -o-border-bottom-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  -webkit-box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
-  -moz-box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
-  box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
+  -webkit-box-shadow: 2px 2px 2px 2px #88887c;
+  -moz-box-shadow: 2px 2px 2px 2px #88887c;
+  box-shadow: 2px 2px 2px 2px #88887c;
   border-left: 1px solid #199b44;
   border-bottom: 1px solid #199b44;
   border-right: 1px solid #199b44;
@@ -383,6 +383,9 @@ section#main > .content:before, section#main > .content:after {
 }
 section#main > .content:after {
   clear: both;
+}
+section#main > .content ol {
+  margin-left: 20px;
 }
 section#main > .content .field-name-field-tab-link ul {
   zoom: 1;
