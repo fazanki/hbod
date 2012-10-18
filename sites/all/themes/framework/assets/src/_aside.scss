@@ -1,0 +1,97 @@
+aside#sidebar-second {
+        
+    #block-views-plant-gallery-block-1 {
+        @include border-radius-2(true);
+        @include border-bottom-left-radius(10px);
+        margin-top:10px;
+        position:relative;
+        padding-bottom:30px;
+        background:$frame-bg-color;
+        
+        .views-slideshow-controls-bottom {
+            position:absolute;
+            bottom:10px;
+            left:55px;
+            span {
+                display:block;
+                width:25px;
+                height:25px;
+                text-indent:-9999px;
+                float:left;
+                background:url('../img/nav-controls.png') no-repeat;
+                margin-right:20px;
+                &:hover{
+                    background-position:-28px 0px;
+                }
+            }
+            .views-slideshow-controls-text-previous {
+                background-position:0 -31px;
+                &:hover{
+                    background-position:-28px -31px;
+                }
+            }
+            
+            .views-slideshow-controls-text-pause {
+                background-position:0 -95px;
+                &:hover{
+                    background-position:-28px -95px;
+                }
+            }
+        }
+        
+        p {
+            padding:10px;
+            margin:0;
+        }
+        h3, h4 {
+            position:absolute;
+            right:0px;
+            background:#fff;
+            padding:2px;
+        }
+        h3 {
+            top:235px;
+        }
+        
+        h4 {
+            top:265px;
+        }
+        img {
+            @include border-radius-2(false);
+        }
+    }
+    
+    #block-views-dogadanja-activnosti-block {
+        margin-top:20px;
+       
+        @include border-radius-2(true);
+        border:1px solid $heading-color;
+        margin-bottom:20px;
+        
+        h2 {
+          font-weight:bold;
+          color:$heading-color;
+          margin:0;
+          padding:7px 5px;
+          border-bottom:1px solid  $heading-color;
+        }
+        
+        h3{
+          padding:5px;
+          a {
+            text-transform:uppercase;
+            color:#990000;
+            text-decoration:none;
+          }
+        } 
+        
+        ul {
+          list-style:none;
+          padding:0;
+          margin:0;
+          li {
+            border-bottom:1px solid #ccc;
+          }
+        }
+    }
+}

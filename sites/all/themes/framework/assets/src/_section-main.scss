@@ -1,0 +1,300 @@
+html.js {
+    article.node {
+        footer{
+            display:none;
+        }
+    }
+}
+
+section#main{
+    padding:10px;
+    h1 {
+        @include headings-style(1.5em);
+    }
+    div.view {
+        margin-top:20px;
+    }
+    
+    // disble rich text format on comments
+    fieldset#edit-comment-body-und-0-format,
+    div#wysiwyg-toggle-wrapper {
+        display:none;
+    }
+    
+    // clanovi
+    .view-clanovi {
+        ul {
+            @include clearfix;
+            list-style-type:none;
+            padding:0;
+            margin:0;
+            li {
+                float:left;
+                margin-top:-5px;
+            }
+        }
+    }
+    div.teaser-list {
+        li {
+            @include clearfix;
+            list-style-type:none;
+            @include border-radius-2(true);
+            margin-bottom:20px;
+            h2 {
+               @include h2-teaser-box; 
+            }
+            img {
+                float:left;
+                margin:10px 0 0 10px;
+            }
+            .field-content  p {
+                width:535px;
+                float:left;
+                margin-left:20px;
+            }
+        }
+    }
+    article.graditent {
+        @include linear-gradient(left, #f0f0f0, #d6d6d6);
+    }
+    article {
+        @include border-radius-2(true);
+        
+        h2 {
+            @include h2-teaser-box;
+        }
+        .content {
+            .field-name-body {
+                float:right;
+                width:550px;
+                p {
+                    color:#333;
+                }
+            }
+            .field-type-image {
+                float:left;
+                margin-top:13px;
+                img {
+                    margin-left:10px;
+                     @include box-shadow(0px 0px 3px 1px hsla(61, 5%, 51%, 0.40));
+                }
+            }
+        }
+    }
+    
+    > .content {
+        @include clearfix;
+        @include border-bottom-left-radius(10px);
+        @include box-shadow(1px 1px 1px 1px hsla(61, 5%, 51%, 1));
+        border-left:1px solid $heading-color;
+        border-bottom:1px solid $heading-color;
+        border-right:1px solid $heading-color;
+        padding:10px;
+       
+        ol {
+            margin-left:20px;
+           
+        }
+        // tab links
+        .field-name-field-tab-link {
+            ul {
+                @include clearfix;
+                margin:0;
+                padding:0;
+                li {
+                    float:left;
+                    list-style-type:none;
+                    margin:0px;
+                    padding:0px;
+                    a {
+                        display:block;
+                        @include button(shiny, #70be8a);
+                        @include border-bottom-radius(0px);
+                        font-size:1em;
+                    }
+                
+                    a.selected {
+                        @include button(shiny, #d6efdc); 
+                        @include border-bottom-radius(0px);
+                        font-size:1em;
+                        padding-top:9px;
+                    }  
+                }
+            }
+        }
+    
+        .field-name-field-body-tab {
+            @include box-shadow(1px 1px 3px 1px hsla(61, 5%, 51%, 0.60));
+            border:1px solid #004f39;
+            clear:both;
+            background:#d6efdc;
+            margin-top:5px;
+            padding:10px;
+            @include border-bottom-left-radius(10px);
+            @include border-top-right-radius(10px);
+            h3 {
+                color:$heading-color;
+                @include linear-gradient(left, #fff, #d6efdc);
+                padding:5px;
+                font-weight:bold;
+                text-transform:uppercase;
+                border-top:1px solid #004f39;
+                border-bottom:1px solid #004f39;
+            }
+        }
+        
+        // web form 
+        .webform-client-form {
+            .form-item {
+                label {
+                    display:block;
+                    float:left;
+                    width:130px;
+                }
+                input[type='text'],input[type='email'] {
+                    @include text-input;
+                    
+                }
+                input[type='file'], input[type='submit'] {
+                    @include button(pill, #c1d9f5); 
+                    text-transform:uppercase;
+                }
+                input[type='submit'] {
+                    margin-left:30px;
+                }
+            }
+            .form-actions {
+                input[type='submit'] {
+                    @include button(shiny, #c1d9f5);
+                    float:right;
+                    padding:10px 50px;
+                    text-transform:uppercase;
+                }
+            }
+        }
+    }
+    
+    // gallery
+    div.porodice {
+        ul {
+            @include clearfix;
+            li {
+                list-style:none;
+                float:left;
+                margin:1px 1px 0 0;
+                a {
+                    color:#990000;
+                    text-transform:uppercase;
+                    text-decoration:none;
+                    display:block;
+                    width:100px;
+                    height:60px;
+                    text-align:center;
+                    background:#ccc;
+                    padding-top:40px;
+                    @include border-radius(5px);
+                    border:1px solid #ccc;
+                    &:hover{
+                        
+                        background:#efefef;
+                    }
+                }
+            }
+        }
+    }
+    
+    div.main-gallery {
+        ul {
+            @include clearfix;
+            li {
+                float:left;
+                list-style-type:none;
+                width:184px;
+                height:290px;
+                background:#d6efdc;
+                margin-right:0px;
+                border-right:1px solid #999 ;
+                .views-field-field-latin-name, .views-field-title {
+                  padding:0 5px;
+                }
+                .views-label {
+                    font-weight:bold;
+                }
+            }
+        }
+    }
+    
+    // pagination
+    div.ab-pagination {
+        ul {
+            @include clearfix;
+            li {
+                list-style:none;
+                float:left;
+                margin-right:10px;
+                a {
+                    text-transform:uppercase;
+                    color:#990000;
+                    text-decoration:none;
+                    font-size:1.2em;
+                    &:hover{
+                        text-decoration:underline;
+                    }
+                }
+            }
+        }
+    }
+    
+    // floristicki folder
+    div.floristicki-folder {
+        ul {
+            @include clearfix;
+            li {
+                float:left;
+                list-style-type:none;
+                margin-right:1px;
+                a {
+                    color:#990000;
+                    text-transform:uppercase;
+                    padding:30px;
+                    display:block;
+                    background:#ccc;
+                    @include border-radius(5px);
+                    text-decoration:none;
+                    border:1px solid #ccc;
+                    &:hover{
+                        background:#efefef;
+                    };
+                }
+            }
+        }
+    }
+    
+    section#block-views-floristicki-folder-block {
+        
+        @include border-bottom-left-radius(10px);
+        @include border-top-right-radius(10px);
+        @include box-shadow(2px 2px 4px 1px hsla(61, 5%, 51%, 0.40));
+        border-left:1px solid $heading-color;
+        border-bottom:1px solid $heading-color;
+        border-right:1px solid $heading-color;
+        
+        h2 {
+            @include headings-style(1.2em);
+            margin-top:40px;
+        }
+        
+        .content {
+            padding:5px;
+        }
+    }
+    
+    // comment buttons 
+    section#comment-form-wrapper {
+        input[type='submit'] {
+             @include button(shiny, #70be8a);
+             float:right;
+        }
+    }    
+    
+}

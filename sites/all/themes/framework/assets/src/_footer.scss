@@ -1,0 +1,41 @@
+body.html {
+
+    footer#footer {
+        width:960px;
+        margin: auto;
+        padding:10px;
+        font-size:$body-font-size;
+        background: #d6efdc;
+        opacity:.85;
+        position:relative;
+        z-index:1;
+        margin-top:-5px;
+        @include clearfix;
+        padding:30px 10;
+        ul {
+            @include clearfix;
+            float:left;
+            list-style-type:none;
+            margin:15px 0;
+            li {
+                float:left;
+                list-style-image:none;
+                list-style-type:none;
+                margin-right:20px;
+                a {
+                    color:#990000;
+                    text-decoration:none;
+                    text-transform:uppercase;
+                    text-shadow: 2px 2px #FFF;
+                    &:hover{
+                        text-decoration:underline;
+                    }
+                }
+            }
+        }
+        p {
+            float:right;
+            margin-top:20px;
+        }
+    }
+}

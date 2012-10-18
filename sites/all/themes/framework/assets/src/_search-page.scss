@@ -1,0 +1,38 @@
+body.page-search-node {
+    
+    h2 {
+        display:none;
+    }
+    form.search-form {
+        margin-top:20px;
+        input[type='text'] {
+            @include text-input;
+        }
+        input[type='submit'] {
+             @include button(pill, #c1d9f5); 
+        }
+        fieldset {
+            margin-top:10px;
+            a.fieldset-title {
+                color:#990000;
+            }
+        }
+    }
+    
+    ol {
+        border-top:1px solid $heading-color;
+        padding-top:10px;
+        li {
+            border-bottom:1px solid $heading-color;
+            h3 {
+                text-transform:uppercase;
+                a {
+                    color:$heading-color;
+                    &:hover{
+                        text-decoration:none;
+                    }
+                }
+            }
+        }
+    }
+}
