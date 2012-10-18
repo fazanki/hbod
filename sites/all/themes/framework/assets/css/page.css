@@ -216,9 +216,9 @@ section#main h1 {
   -o-border-top-right-radius: 10px;
   border-top-right-radius: 10px;
   padding-left: 10px;
-  -webkit-box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
-  -moz-box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
-  box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
+  -webkit-box-shadow: 1px 1px 1px 1px #88887c;
+  -moz-box-shadow: 1px 1px 1px 1px #88887c;
+  box-shadow: 1px 1px 1px 1px #88887c;
 }
 section#main div.view {
   margin-top: 20px;
@@ -300,6 +300,17 @@ section#main div.teaser-list li .field-content p {
   width: 535px;
   float: left;
   margin-left: 20px;
+}
+section#main div.teaser-list li div.exterlanUrl {
+  margin: 0 0 20px 20px;
+  float: left;
+}
+section#main div.teaser-list li div.exterlanUrl a {
+  color: #199b44;
+  text-decoration: none;
+}
+section#main div.teaser-list li div.exterlanUrl a:hover {
+  text-decoration: underline;
 }
 section#main article.graditent {
   background-color: #f0f0f0;
@@ -388,8 +399,15 @@ section#main > .content:before, section#main > .content:after {
 section#main > .content:after {
   clear: both;
 }
-section#main > .content ol {
+section#main > .content ol, section#main > .content ul {
   margin-left: 20px;
+}
+section#main > .content a {
+  color: #199b44;
+  text-decoration: none;
+}
+section#main > .content a:hover {
+  text-decoration: underline;
 }
 section#main > .content .field-name-field-tab-link ul {
   zoom: 1;
@@ -837,9 +855,9 @@ section#main section#block-views-floristicki-folder-block h2 {
   -o-border-top-right-radius: 10px;
   border-top-right-radius: 10px;
   padding-left: 10px;
-  -webkit-box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
-  -moz-box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
-  box-shadow: 2px 2px 4px 1px rgba(136, 136, 124, 0.4);
+  -webkit-box-shadow: 1px 1px 1px 1px #88887c;
+  -moz-box-shadow: 1px 1px 1px 1px #88887c;
+  box-shadow: 1px 1px 1px 1px #88887c;
   margin-top: 40px;
 }
 section#main section#block-views-floristicki-folder-block .content {

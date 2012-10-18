@@ -10,7 +10,7 @@
     @include linear-gradient(left, #fff, $heading-color);
     @include border-top-right-radius(10px);
     padding-left:10px;
-    @include box-shadow(2px 2px 4px 1px hsla(61, 5%, 51%, 0.40));
+    @include box-shadow(1px 1px 1px 1px hsla(61, 5%, 51%, 1));
 }
 
 @mixin teaser-box {

@@ -52,6 +52,17 @@ section#main{
                 float:left;
                 margin-left:20px;
             }
+            div.exterlanUrl {
+                margin:0 0 20px 20px;
+                float:left;
+                a {
+                    color:$heading-color;
+                    text-decoration:none;
+                    &:hover {
+                        text-decoration:underline;
+                    }
+                }
+            }
         }
     }
     article.graditent {
@@ -91,9 +102,16 @@ section#main{
         border-right:1px solid $heading-color;
         padding:10px;
        
-        ol {
+        ol, ul {
             margin-left:20px;
            
+        }
+        a {
+            color:$heading-color;
+            text-decoration:none;
+            &:hover {
+                text-decoration:underline;
+            }
         }
         // tab links
         .field-name-field-tab-link {
