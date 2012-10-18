@@ -1027,9 +1027,16 @@ class views_many_to_one_helper {
         else {
           $operator = "$operator $placeholder";
         }
-        $placeholders = array(
-          $placeholder => $value,
-        ) + $this->placeholders;
+       if(isset($this->placeholders)) {
+         $placeholders = array(
+            $placeholder => $value,
+          ) + $this->placeholders;
+        }
+        else {
+          $placeholders = array(
+            $placeholder => $value,
+          );
+        }
         $this->handler->query->add_where_expression($options['group'], "$field $operator", $placeholders);
       }
       else {
