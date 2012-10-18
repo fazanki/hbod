@@ -6,8 +6,8 @@
  */
 
 /**
-* Implementation of hook_action_info().
-*/
+ * Implements hook_action_info().
+ */
 function mimemail_action_info() {
   return array(
     'mimemail_send_email_action' => array(
@@ -20,7 +20,7 @@ function mimemail_action_info() {
 }
 
 /**
- * Implementation of a configurable Drupal action. Sends an email.
+ * Implements a configurable Drupal action. Sends an email.
  */
 function mimemail_send_email_action($entity, $context) {
   if (empty($context['node'])) {
@@ -58,7 +58,16 @@ function mimemail_send_email_action($entity, $context) {
  * Form for configurable Drupal action to send an HTML mail.
  */
 function mimemail_send_email_action_form($context) {
-  $context += array('to' => '', 'cc' => '', 'bcc' => '', 'subject' => '', 'body' => '', 'format' => filter_fallback_format(), 'plaintext' => '', 'attachments' => '');
+  $context += array(
+    'to' => '',
+    'cc' => '',
+    'bcc' => '',
+    'subject' => '',
+    'body' => '',
+    'format' => filter_fallback_format(),
+    'plaintext' => '',
+    'attachments' => ''
+  );
 
   $form['to'] = array(
     '#type' => 'textfield',
@@ -68,7 +77,7 @@ function mimemail_send_email_action_form($context) {
     '#description' => t('The email address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
     '#required' => TRUE,
   );
- $form['cc'] = array(
+  $form['cc'] = array(
     '#type' => 'textfield',
     '#title' => t('CC Recipient'),
     '#default_value' => $context['cc'],
@@ -106,7 +115,7 @@ function mimemail_send_email_action_form($context) {
     '#type' => 'textarea',
     '#title' => t('Attachments'),
     '#default_value' => $context['attachments'],
-    '#description' => t('A list of attachments, one file per line e.g. "files/images/mypic.png\".'),
+    '#description' => t('A list of attachments, one file per line e.g. "files/images/mypic.png" without quotes.'),
   );
 
   return $form;

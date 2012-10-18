@@ -247,7 +247,7 @@ function themekey_ui_form_alter(&$form, $form_state, $form_id) {
       if ($form_id == $type . '_node_form' && variable_get('themekey_ui_nodeform|' . $type, 1)) {
         module_load_include('inc', 'themekey_ui', 'themekey_ui_admin');
         $description = t('Theme configuration for this node');
-        if (module_exists('og') && variable_get('og_group_type_' . $type, 'omitted') != 'omitted') {          
+        if (module_exists('og') && variable_get('og_group_type_' . $type, 'omitted') != 'omitted') {
           $description .= '<p><b>' . t('Note:') . '</b> ' .
             t('This content type is used in Organic Groups. By default, the theme you select here will only be used to display this node if you set the theme for the Organic Group to %theme',
               array('%theme' => variable_get('theme_default', 'bartik') .
@@ -325,12 +325,12 @@ function themekey_ui_node_update($node) {
 
   if (!empty($node->themekey_ui_theme)) {
 
-    if (!$node->revision && 0 < db_select('themekey_ui_node_theme', 't')
-                                ->fields('t')
-                                ->condition('nid', $node->nid)
-                                ->condition('vid', $node->vid)
-                                ->execute()
-                                ->rowCount()
+    if (!(isset($node->revision) && $node->revision) && 0 < db_select('themekey_ui_node_theme', 't')
+                                                            ->fields('t')
+                                                            ->condition('nid', $node->nid)
+                                                            ->condition('vid', $node->vid)
+                                                            ->execute()
+                                                            ->rowCount()
     ) {
 
       // UPDATE

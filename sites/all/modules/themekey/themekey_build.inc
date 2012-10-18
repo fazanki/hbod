@@ -285,7 +285,7 @@ function themekey_prepare_custom_path($path) {
  */
 function themekey_load_rules($parent = 0, $depth = 0) {
   $properties = array();
-  
+
   $result = db_select('themekey_properties', 'tp')
     ->fields('tp')
     ->condition('parent', $parent)
@@ -300,7 +300,7 @@ function themekey_load_rules($parent = 0, $depth = 0) {
     $properties[$item->id] = get_object_vars($item);
     $properties = $properties + themekey_load_rules($item->id, $depth + 1);
   }
-  
+
   return $properties;
 }
 
@@ -338,11 +338,11 @@ function themekey_rule_set(&$item, $module = 'themekey') {
   if (empty($item['module'])) {
     $item['module'] = trim($module);
   }
-  
+
   // TRANSACTIONS - SEE http://drupal.org/node/355875
   // The transaction opens here.
   $txn = db_transaction();
-  
+
   if (empty($item['id'])) {
     if ($item['enabled']) {
       $id = db_select('themekey_properties', 'tp')
@@ -354,12 +354,12 @@ function themekey_rule_set(&$item, $module = 'themekey') {
         ->condition('enabled', 1)
         ->execute()
         ->fetchField();
-    
+
       if ($id) {
         throw new ThemeKeyRuleConfictException(t('New rule conficts with an existing rule on the same level.'), $id);
       }
     }
-        
+
     // new entry should be added at the end of the chain
     $result = db_select('themekey_properties', 'tp');
     $result->addExpression('MAX(weight)', 'weight');
@@ -382,12 +382,12 @@ function themekey_rule_set(&$item, $module = 'themekey') {
         ->condition('id', $item['id'] , '<>')
         ->execute()
         ->fetchField();
-    
+
       if ($id) {
         throw new ThemeKeyRuleConfictException(t('Updated rule conficts with an existing rule on the same level.'), $id);
       }
     }
-    
+
     drupal_write_record('themekey_properties', $item, 'id');
   }
 
@@ -505,11 +505,11 @@ function themekey_rule_get($id) {
  */
 function themekey_update_static_rule($property, $state) {
 
-  $id = db_select('themekey_properties', 'tp')
-    ->fields('tp', array('id'))
+  $existing_rule = db_select('themekey_properties', 'tp')
+    ->fields('tp', array('id', 'enabled', 'parent'))
     ->condition('property', $property)
     ->execute()
-    ->fetchField();
+    ->fetchAssoc();
 
 
   if ($state) {
@@ -520,19 +520,21 @@ function themekey_update_static_rule($property, $state) {
       'theme' => 'default',
     );
 
-    if ($id) {
-      $item['id'] = $id;
-      // leave 'enabled' as it is in database
+    if (!empty($existing_rule)) {
+      $item['id'] = $existing_rule['id'];
+      $item['enabled'] = $existing_rule['enabled'];
+      $item['parent'] = $existing_rule['parent'];
     }
     else {
       // enable new rule
       $item['enabled'] = 1;
+      $item['parent'] = 0;
     }
 
     themekey_rule_set($item);
   }
-  elseif ($id) {
-    themekey_rule_del($id);
+  elseif (!empty($existing_rule)) {
+    themekey_rule_del($existing_rule['id']);
   }
 }
 

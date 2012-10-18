@@ -76,7 +76,7 @@ function rules_action_mimemail_to_users_of_role($roles, $from_name = NULL, $from
   else {
     $rids = implode(',', $roles);
     // Avoid sending emails to members of two or more target role groups.
-    $result = db_query('SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.rid IN ('. $rids .')');
+    $result = db_query('SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.rid IN (' . $rids . ')');
   }
 
   $params = array(

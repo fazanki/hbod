@@ -16,9 +16,9 @@ files[] = includes/mimemail.incoming.inc
 files[] = theme/mimemail-message.tpl.php
 files[] = theme/mimemail.theme.inc
 
-; Information added by drupal.org packaging script on 2011-12-18
-version = "7.x-1.0-alpha1"
+; Information added by drupal.org packaging script on 2012-08-22
+version = "7.x-1.0-alpha2"
 core = "7.x"
 project = "mimemail"
-datestamp = "1324234543"
+datestamp = "1345634537"
 

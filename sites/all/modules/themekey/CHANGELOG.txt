@@ -1,3 +1,13 @@
+ThemeKey 7.x-2.3, 2012-07-24
+----------------------------
+[#686650]  daggerhart, mkalkbrenner: add Organic Groups to properties (continued experimental implementation)
+[#1651026] mkalkbrenner: fixed notice when activating a static rule
+[#1653236] minorOffense: Add support for PURL modifiers
+[#1623010] mkalkbrenner: fixed Notice: Undefined property: stdClass::$revision in themekey_ui_node_update()
+[#1694782] mkalkbrenner: fixed Notice: Undefined index: enabled in themekey_rule_set()
+[        ] mkalkbrenner: verify that "Selectable Themes" are configured when activating "Add theme option to user profile" provided "ThemeKey User Profile" module
+
+
 ThemeKey 7.x-2.2, 2012-05-24
 ----------------------------
 [#1598752] jadwigo, mkalkbrenner: fixed notice in non-multilingual sites

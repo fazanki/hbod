@@ -64,12 +64,12 @@ class mimemail_compress {
     }
 
     $err = error_reporting(0);
-    $doc = new DOMDocument;
+    $doc = new DOMDocument();
 
     // Try to set character encoding.
     if (function_exists('mb_convert_encoding')) {
-        $body = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
-        $doc->encoding= "UTF-8";
+      $body = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
+      $doc->encoding= "UTF-8";
     }
 
     $doc->strictErrorChecking = FALSE;
@@ -133,7 +133,9 @@ class mimemail_compress {
           // New styles overwrite the old styles (not technically accurate, but close enough).
           $compressed = array_merge($old_style, $new_style);
           $style = '';
-          foreach ($compressed as $k => $v) $style .= (drupal_strtolower($k) . ':' . $v . ';');
+          foreach ($compressed as $k => $v) {
+            $style .= (drupal_strtolower($k) . ':' . $v . ';');
+          }
         }
         else {
           // Otherwise create a new style.
@@ -145,7 +147,16 @@ class mimemail_compress {
 
     // This removes styles from your email that contain display:none. You could comment these out if you want.
     $nodes = $xpath->query('//*[contains(translate(@style," ",""), "display:none")]');
-    foreach ($nodes as $node) $node->parentNode->removeChild($node);
+    foreach ($nodes as $node) {
+      $node->parentNode->removeChild($node);
+    }
+
+    if (variable_get('mimemail_preserve_class', 0) == FALSE) {
+      $nodes = $xpath->query('//*[@class]');
+      foreach ($nodes as $node) {
+        $node->removeAttribute('class');
+      }
+    }
 
     error_reporting($err);
 
@@ -163,7 +174,8 @@ class mimemail_compress {
   private static function get_selector_precedence($selector) {
     $precedence = 0;
     $value = 100;
-    $search = array('\#', '\.', ''); // ids: worth 100, classes: worth 10, elements: worth 1
+    // Ids: worth 100, classes: worth 10, elements: worth 1.
+    $search = array('\#', '\.', '');
 
     foreach ($search as $s) {
       if (trim($selector == '')) break;
@@ -179,10 +191,10 @@ class mimemail_compress {
   /**
    * Right now we only support CSS 1 selectors, but include CSS2/3 selectors are fully possible.
    *
-   * @see http://plasmasturm.org/log/444/
+   * @see http://plasmasturm.org/log/444
    */
   private function css_to_xpath($selector) {
-    if (substr($selector, 0, 1) == '/') {
+    if (drupal_substr($selector, 0, 1) == '/') {
       // Already an XPath expression.
       return $selector;
     }
@@ -220,16 +232,25 @@ class mimemail_compress {
     return $css_styles;
   }
 
-  // Get the full path to a DOM node.
-  // @see http://stackoverflow.com/questions/2643533/php-getting-xpath-of-a-domnode
+  /**
+   * Get the full path to a DOM node.
+   *
+   * @param DOMNode $node
+   *   The node to analyze.
+   *
+   * @return string
+   *   The full xpath to a DOM node.
+   *
+   * @see http://stackoverflow.com/questions/2643533/php-getting-xpath-of-a-domnode
+   */
   function calculateXPath(DOMNode $node) {
     $xpath = '';
     $q = new DOMXPath($node->ownerDocument);
 
     do {
         $position = 1 + $q->query('preceding-sibling::*[name()="' . $node->nodeName . '"]', $node)->length;
-        $xpath    = '/' . $node->nodeName . '[' . $position . ']' . $xpath;
-        $node     = $node->parentNode;
+        $xpath = '/' . $node->nodeName . '[' . $position . ']' . $xpath;
+        $node = $node->parentNode;
     }
     while (!$node instanceof DOMDocument);
 

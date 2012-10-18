@@ -19,6 +19,9 @@
 // import serach page
 @import "search-page";
 
+// superfish menu
+@import "superfish";
+
 //wusiwug
 p strong {
     font-weight:bold;
@@ -124,56 +127,7 @@ body.html {
         }
     }
        
-    #block-superfish-1 {
-        //margin-left:5px;
-        ul.sf-menu {
-           > li.sfHover {
-               > ul {
-                    top:32px;
-                    left:-1px;
-                }
-            }
-        }
-         
-        #superfish-1{
-            margin-top:5px;
-            li {
-              ///@include button(shiny, #c1d9f5); 
-             // @include border-radius(0px);
-               font-size:.94em;
-               padding:0;
-               margin-right:1px;
-               >ul {
-                    >li {
-                        border-bottom:1px solid #fff;
-                    }
-               }
-           }
-           
-            a {
-                padding:15px 17px 15px 17px;
-                border:none;
-                font-size:1.2em;
-                margin:0;
-                color:#000;
-                text-transform:uppercase;
-                //border:1px solid #f00;
-                &:hover {
-                    color:#900;
-                    background:none;
-                }
-                
-            }
-        }
-    }
-    nav#navigation {
-      // background:$frame-bg-color;
-       position:absolute;
-       left:0;
-       top:235px;
-       width:auto;
-       padding-left:5px;
-    }
+    
     aside#sidebar-second {
         
         #block-views-plant-gallery-block-1 {

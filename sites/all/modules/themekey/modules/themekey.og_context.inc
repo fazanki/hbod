@@ -41,10 +41,9 @@ function themekey_og_themekey_properties() {
   $maps[] = array('src' => 'node:nid',
                   'dst' => 'group:id',
                   'callback' => 'themekey_og_nid2gid');
-  // TODO
-  // $maps[] = array('src' => 'node:nid',
-  //                 'dst' => 'group:type',
-  //                 'callback' => 'themekey_og_nid2type');
+  $maps[] = array('src' => 'node:nid',
+                  'dst' => 'group:type',
+                  'callback' => 'themekey_og_nid2type');
 
   return array('attributes' => $attributes, 'maps' => $maps);
 }
@@ -81,5 +80,30 @@ function themekey_og_nid2gid($nid) {
     return $group['gid'];
   }
   
+  return NULL;
+}
+
+
+/**
+ * ThemeKey mapping function to set a
+ * ThemeKey property's value (destination)
+ * with the aid of another ThemeKey property (source).
+ *
+ * src: node:nid
+ * dst: group:type
+ *
+ * @param $nid
+ *   a node id
+ *
+ * @return
+ *   string
+ *   or NULL if no value could be mapped
+ */
+function themekey_og_nid2type($nid){
+  // look for group info from context
+  if ($group = og_context()){
+    return $group['group_type'];
+  }
+
   return NULL;
 }

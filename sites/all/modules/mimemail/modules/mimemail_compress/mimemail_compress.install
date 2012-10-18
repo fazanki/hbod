@@ -13,21 +13,19 @@ function mimemail_compress_requirements($phase) {
   // Ensure translations don't break at install time.
   $t = get_t();
 
-  // Test PHP DOM Extension.
-  $requirements['dom'] = array(
-    'title' => $t('PHP DOM Extension')
-  );
-
-  if (!extension_loaded('dom')) {
-    $requirements['dom']['description'] = $t('Mime Mail Compress requires the PHP DOM extension to be enabled.');
-    $requirements['dom']['severity'] = REQUIREMENT_ERROR;
-    if ($phase == 'runtime') {
-      $requirements['dom']['value'] = $t('Disabled');
-    }
-  }
-  elseif ($phase == 'runtime') {
+  // Test PHP DOM extension.
+  if (extension_loaded('dom')) {
     $requirements['dom']['value'] = $t('Enabled');
   }
+  else {
+    $requirements['dom'] = array(
+      'description' => $t('Mime Mail Compress requires the PHP DOM extension to be enabled.'),
+      'severity' => REQUIREMENT_ERROR,
+      'value' => $t('Disabled'),
+    );
+  }
+
+  $requirements['dom']['title'] = $t('PHP DOM extension');
 
   return $requirements;
 }

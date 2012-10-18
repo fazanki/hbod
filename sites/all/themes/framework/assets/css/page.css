@@ -188,6 +188,7 @@ html.js article.node footer {
 
 section#main {
   padding: 10px;
+  border: 1px solid #00f;
 }
 section#main h1 {
   font-size: 1.5em;
@@ -369,9 +370,9 @@ section#main > .content {
   -ms-border-bottom-left-radius: 10px;
   -o-border-bottom-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  -webkit-box-shadow: 2px 2px 2px 2px #88887c;
-  -moz-box-shadow: 2px 2px 2px 2px #88887c;
-  box-shadow: 2px 2px 2px 2px #88887c;
+  -webkit-box-shadow: 1px 1px 1px 1px #88887c;
+  -moz-box-shadow: 1px 1px 1px 1px #88887c;
+  box-shadow: 1px 1px 1px 1px #88887c;
   border-left: 1px solid #199b44;
   border-bottom: 1px solid #199b44;
   border-right: 1px solid #199b44;
@@ -980,6 +981,45 @@ body.page-search-node ol li h3 a:hover {
   text-decoration: none;
 }
 
+#block-superfish-1 ul.sf-menu > li.sfHover > ul {
+  top: 32px;
+  left: -1px;
+}
+#block-superfish-1 #superfish-1 {
+  margin-top: 5px;
+}
+#block-superfish-1 #superfish-1 li {
+  font-size: .94em;
+  padding: 0;
+  margin-right: 1px;
+}
+#block-superfish-1 #superfish-1 li > ul > li {
+  border-bottom: 1px solid #fff;
+}
+#block-superfish-1 #superfish-1 a {
+  padding: 15px 17px 15px 17px;
+  border: none;
+  font-size: 1.2em;
+  margin: 0;
+  color: #000;
+  text-transform: uppercase;
+}
+#block-superfish-1 #superfish-1 a:hover {
+  color: #900;
+  background: none;
+}
+
+nav#navigation {
+  background: #dae6f5;
+  position: absolute;
+  left: 0;
+  top: 235px;
+  width: auto;
+  padding-left: 5px;
+  z-index: 5000;
+  border: 1px solid #f00;
+}
+
 p strong {
   font-weight: bold;
 }
@@ -1157,40 +1197,6 @@ body.html #block-search-form input[type='search'] {
   -moz-box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.4);
   box-shadow: 2px 2px 3px 1px rgba(136, 136, 124, 0.4);
   width: 132px;
-}
-body.html #block-superfish-1 ul.sf-menu > li.sfHover > ul {
-  top: 32px;
-  left: -1px;
-}
-body.html #block-superfish-1 #superfish-1 {
-  margin-top: 5px;
-}
-body.html #block-superfish-1 #superfish-1 li {
-  font-size: .94em;
-  padding: 0;
-  margin-right: 1px;
-}
-body.html #block-superfish-1 #superfish-1 li > ul > li {
-  border-bottom: 1px solid #fff;
-}
-body.html #block-superfish-1 #superfish-1 a {
-  padding: 15px 17px 15px 17px;
-  border: none;
-  font-size: 1.2em;
-  margin: 0;
-  color: #000;
-  text-transform: uppercase;
-}
-body.html #block-superfish-1 #superfish-1 a:hover {
-  color: #900;
-  background: none;
-}
-body.html nav#navigation {
-  position: absolute;
-  left: 0;
-  top: 235px;
-  width: auto;
-  padding-left: 5px;
 }
 body.html aside#sidebar-second #block-views-plant-gallery-block-1 {
   -webkit-box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);

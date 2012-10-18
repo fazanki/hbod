@@ -14,66 +14,10 @@ function mimemail_theme_theme() {
       'template' => 'mimemail-message',
       'pattern' => 'mimemail_message__',
       'file' => 'mimemail.theme.inc',
+      'mail theme' => TRUE,
       'path' => $path,
     )
   );
-}
-
-/**
- * Implements hook_theme_registry_alter().
- */
-function mimemail_theme_theme_registry_alter(&$theme_registry) {
-  global $theme_key;
-  static $executed = array();
-
-  // Preventing double execution.
-  if (isset($executed[$theme_key])) {
-    return;
-  }
-
-  $executed[$theme_key] = TRUE;
-  foreach ($theme_registry as $name => $hook) {
-    if ($name == 'mimemail_message') {
-      $mimemail_theme = _mimemail_get_theme();
-
-      // We don't have to change anything in case the render theme is the current theme.
-      if ($mimemail_theme != $theme_key) {
-        $themes = list_themes();
-        // Getting the render theme.
-        $theme = isset($themes[$mimemail_theme]) ? clone $themes[$mimemail_theme] : NULL;
-        if ($theme != NULL) {
-          // Stablishing variables for further process.
-          $base_theme = array();
-          if (isset($theme->base_themes)) {
-            foreach (array_keys($theme->base_themes) as $base) {
-              $base_theme[$base] = clone $themes[$base];
-            }
-          }
-          if (isset($theme->base_theme) && !isset($base_theme[$theme->base_theme])) {
-            $base_theme[$theme->base_theme] = clone $themes[$theme->base_theme];
-          }
-          $theme_engine = isset($theme->engine) ? $theme->engine : NULL;
-
-          // Include template files to let _theme_load_registry add preprocess functions.
-          include_once(drupal_get_path('theme', $theme->name) . '/template.php');
-          foreach ($base_theme as $base) {
-            include_once(drupal_get_path('theme', $base->name) . '/template.php');
-          }
-
-          // Get the theme_registry cache.
-          $cache = _theme_load_registry($theme, $base_theme, $theme_engine);
-          if (isset($cache[$name])) {
-            $cache[$name]['includes'][] = drupal_get_path('theme', $theme->name) . '/template.php';
-            foreach ($base_theme as $base) {
-              $cache[$name]['includes'][] = drupal_get_path('theme', $base->name) . '/template.php';
-            }
-            // Changing current registry for the new record.
-            $theme_registry[$name] = $cache[$name];
-          }
-        }
-      }
-    }
-  }
 }
 
 /**
@@ -85,10 +29,10 @@ function mimemail_theme_theme_registry_alter(&$theme_registry) {
  * - $subject: The message subject
  * - $body:  The message body
  *
- * @see theme/mimemail-message.tpl.php for additional variables.
+ * @see mimemail-message.tpl.php
  */
 function template_preprocess_mimemail_message(&$variables) {
-  $theme = _mimemail_get_theme();
+  $theme = mailsystem_get_mail_theme();
   $themepath = drupal_get_path('theme', $theme);
 
   $sitestyle = variable_get('mimemail_sitestyle', 1);
@@ -103,18 +47,20 @@ function template_preprocess_mimemail_message(&$variables) {
   // If no mail.css was found and the site style sheets including is enabled,
   // gather all style sheets and embed a version of all style definitions.
   elseif ($sitestyle) {
-    $css_all = drupal_add_css();
-    $css_files = array();
-    foreach ($css_all as $key => $options) {
-      if ($options['group'] == CSS_THEME && $options['type'] == 'file' &&
-         ($options['media'] == 'all' || $options['media'] == 'screen')) {
-        $css_files[$key] = $options;
-      }
-    }
     // Grab local.css if it exists (support for Fusion based themes).
     $local = $themepath . '/css/local.css';
     if (@file_exists($local)) {
-      $css_files['all']['theme'][$local] = TRUE;
+      $css_all = drupal_add_css($local, array('group' => CSS_THEME));
+    }
+    else {
+      $css_all = drupal_add_css();
+    }
+    $css_files = array();
+    foreach ($css_all as $key => $options) {
+      if ($options['group'] == CSS_THEME && $options['type'] == 'file' &&
+        ($options['media'] == 'all' || $options['media'] == 'screen')) {
+        $css_files[$key] = $options;
+      }
     }
     if (variable_get('preprocess_css', FALSE)) {
       $pattern = '|<link.*href="' . $GLOBALS['base_url'] . '/([^"?]*)[?"].*|';
@@ -201,35 +147,4 @@ function _mimemail_process_comment($matches) {
       // Single line IE-Mac hack.
       return '/*\_*/';
   }
-}
-
-/**
- * Helper function to retrieve the key of the theme to render the emails.
- *
- * @todo Add some kind of hook to let other modules alter this behavior.
- */
-function _mimemail_get_theme() {
-  global $theme_key;
-
-  $theme = variable_get('mimemail_theme', 'current');
-  switch ($theme) {
-    case 'default':
-      $theme = variable_get('theme_default', NULL);
-      break;
-    case 'current':
-      $theme = $theme_key;
-      break;
-    case 'domain_theme':
-      // Fetch the theme for the current domain.
-      if (module_exists('domain_theme')) {
-        // Assign the selected theme, based on the active domain.
-        global $_domain;
-        $domain_theme = domain_theme_lookup($_domain['domain_id']);
-        // The above returns -1 on failure.
-        $theme = ($domain_theme != -1) ? $domain_theme['theme'] : $theme_key;
-      }
-      break;
-  }
-
-  return $theme;
 }

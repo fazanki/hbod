@@ -34,7 +34,7 @@ function mimemail_disable() {
 }
 
 /**
- * Implementation of hook_uninstall()
+ * Implements hook_uninstall().
  */
 function mimemail_uninstall() {
   $variables = array(
@@ -50,6 +50,7 @@ function mimemail_uninstall() {
     'mimemail_format',
     'mimemail_simple_address',
     'mimemail_linkonly',
+    'mimemail_preserve_class'
   );
   foreach ($variables as $variable) {
     variable_del($variable);
@@ -93,12 +94,18 @@ function mimemail_requirements($phase) {
 }
 
 /**
- * Implements hook_update_N().
- *
- * @see mimemail_requirements().
+ * Check installation requirements.
  */
 function mimemail_update_7000() {
   if ($requirements = mimemail_requirements('runtime')) {
     throw new DrupalUpdateException($requirements['mimemail_mailsystem']['description']);
   }
 }
+
+/**
+ * Deletes useless variables.
+ */
+function mimemail_update_7001() {
+  variable_del('mimemail_theme');
+}
+

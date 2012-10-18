@@ -63,6 +63,14 @@ function mimemail_admin_settings() {
     '#default_value' => variable_get('mimemail_linkonly', 0),
     '#description'   => t('This option disables the embedding of images. All image will be available as external content. This can make email messages much smaller.'),
   );
+  if (module_exists('mimemail_compress')) {
+    $form['mimemail']['mimemail_preserve_class'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Preserve class attributes'),
+      '#default_value' => variable_get('mimemail_preserve_class', 0),
+      '#description' => t('This option disables the removing of class attributes from the message source. Useful for debugging the style of the message.'),
+    );
+  }
 
   // Get a list of all formats.
   $formats = filter_formats();
@@ -76,26 +84,6 @@ function mimemail_admin_settings() {
     '#default_value' => variable_get('mimemail_format', filter_fallback_format()),
     '#access' => count($formats) > 1,
     '#attributes' => array('class' => array('filter-list')),
-  );
-
-  // Generate a list of options which theme to use to render the emails.
-  $theme_options = array('current' => t('Current'), 'default' => t('Default'));
-  if (module_exists('domain_theme')) {
-    $theme_options['domain'] = t('Domain');
-  }
-  // Get a list of all themes.
-  $themes = list_themes();
-  foreach ($themes as $name => $theme) {
-    if ($theme->status == 1) {
-      $theme_options[$name] = $theme->info['name'];
-    }
-  }
-  $form['mimemail']['mimemail_theme'] = array(
-    '#type' => 'select',
-    '#title' => t('Theme to render the emails'),
-    '#description' => t('Select the theme that will be used to render the emails. This can be either the current theme, the default theme, the domain theme or any active theme.'),
-    '#options' => $theme_options,
-    '#default_value' => variable_get('mimemail_theme', 'current'),
   );
 
   $form['mimemail']['advanced'] = array(
@@ -157,16 +145,5 @@ function mimemail_admin_settings() {
     drupal_set_message(t('Please choose a mail engine.'), 'error');
   }
 
-  $form['#submit'][] = 'mimemail_admin_settings_submit';
-
   return system_settings_form($form);
-}
-
-/**
- * Submit handler for the settings form.
- *
- * Rebuilds theme registry to make changes needed by theme rendering.
- */
-function mimemail_admin_settings_submit($form, &$form_state) {
-  drupal_theme_rebuild();
 }
