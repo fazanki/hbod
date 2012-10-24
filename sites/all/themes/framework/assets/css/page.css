@@ -1093,12 +1093,35 @@ aside#sidebar-second #block-views-plant-gallery-block-1 p {
 }
 aside#sidebar-second #block-views-plant-gallery-block-1 h3, aside#sidebar-second #block-views-plant-gallery-block-1 h4 {
   position: absolute;
-  right: 0px;
+  right: 10px;
   background: #fff;
   padding: 2px;
 }
 aside#sidebar-second #block-views-plant-gallery-block-1 h3 {
-  top: 235px;
+  top: 270px;
+  background-color: white;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #d6efdc));
+  background-image: -webkit-linear-gradient(left, white, #d6efdc);
+  background-image: -moz-linear-gradient(left, white, #d6efdc);
+  background-image: -ms-linear-gradient(left, white, #d6efdc);
+  background-image: -o-linear-gradient(left, white, #d6efdc);
+  background-image: linear-gradient(left, white, #d6efdc);
+  -webkit-box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);
+  -moz-box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);
+  box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -ms-border-top-right-radius: 10px;
+  -o-border-top-right-radius: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-bottom-left-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  -ms-border-bottom-left-radius: 10px;
+  -o-border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding-left: 10px;
 }
 aside#sidebar-second #block-views-plant-gallery-block-1 h4 {
   top: 265px;

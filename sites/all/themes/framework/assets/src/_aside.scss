@@ -41,12 +41,16 @@ aside#sidebar-second {
         }
         h3, h4 {
             position:absolute;
-            right:0px;
+            right:10px;
             background:#fff;
             padding:2px;
         }
         h3 {
-            top:235px;
+            top:270px;
+            @include linear-gradient(left, #fff, #d6efdc);
+            @include border-radius-2(true);
+            padding-left:10px;
+
         }
         
         h4 {
