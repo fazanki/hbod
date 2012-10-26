@@ -19,10 +19,11 @@ header#header {
     height:291px;
     #logo {
         position:absolute;
-        top:38px;
-        left:0px;
+        top:0px;
+        left:-60px;
         img {
-            @include box-shadow(2px 2px 3px 2px hsla(61, 5%, 51%, 0.30));
+           // @include box-shadow(2px 2px 3px 2px hsla(61, 5%, 51%, 0.30));
+            width:60px;
         }
 
     }
@@ -122,7 +123,7 @@ header#header {
     }
     #block-views-slideshow-heading-block {
         img {
-           @include box-shadow(0px 2px 4px 3px hsla(61, 5%, 51%, 0.40));
+          // @include box-shadow(0px 2px 4px 3px hsla(61, 5%, 51%, 0.40));
         }
         float:right;
         margin-top:1px;
