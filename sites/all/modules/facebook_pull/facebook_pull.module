@@ -1,0 +1,316 @@
+<?php
+
+
+/**
+ * Default cache time
+ */
+define('FACEBOOK_PULL_CACHETIME', 1200);
+
+
+/**
+ * Implementation of hook_init().
+ */
+function facebook_pull_init() {
+  drupal_add_css(drupal_get_path('module', 'facebook_pull') . '/facebook_pull.css');
+}
+
+
+/**
+ * Implementation of hook_theme().
+ */
+function facebook_pull_theme($existing, $type, $theme, $path) {
+  $theme = array(
+    'facebook_pull_feed' => array(
+      'variables' => array('items' => array()),
+      'template'  => 'facebook_pull-feed',
+    ),
+    'facebook_pull_notes' => array(
+      'variables' => array('feedid' => 0, 'items' => array()),
+      'template'  => 'facebook_pull-notes',
+    ),
+  );
+  return $theme;
+}
+
+
+/**
+ * Implementation of hook_perm().
+ */
+
+function facebook_pull_permission() {
+  return array(
+    'administer facebook pull' => array(
+      'title' => t('Administer facebook pull'),
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function facebook_pull_menu() {
+  $items = array();
+
+  $items['admin/config/services/facebook-pull'] = array(
+    'title' => 'Facebook pull',
+    'description' => 'Set Facebook API details for facebook blocks.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('facebook_pull_settings'),
+    'access arguments' => array('administer facebook pull '),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implementation of hook_block_list().
+ */
+function facebook_pull_block_info() {
+  $blocks = array();
+
+  $blocks['facebook_pull_default'] = array(
+    'info' => t('Facebook stream'),
+    'weight' => 0,
+    'status' => 0,
+    'cache' => DRUPAL_CACHE_GLOBAL,
+  );
+
+  return $blocks;
+}
+
+
+/**
+ * Implementation of hook_block_view().
+ */
+function facebook_pull_block_view($delta = '') {
+  $block = array();
+  
+  switch ($delta) {
+    case 'facebook_pull_default':
+      $block = array(
+        'title' => t('Facebook stream'),
+        'content' => _facebook_pull_render_block(),
+      );
+      break;
+  }
+  
+  return $block;
+}
+
+
+/*
+* Implementation hook_ctools_plugin_api().
+*/
+function facebook_pull_ctools_plugin_api($module, $api) {
+  return array('version' => 1);
+}
+
+
+/**
+ * Implementation of hook_boxes_plugins().
+ */
+function facebook_pull_boxes_plugins() {
+  $info = array();
+  $path = drupal_get_path('module', 'facebook_pull') .'/plugins';
+  $info['facebook_pull'] = array(
+    'title' => 'Facebook box',
+    'handler' => array(
+      'parent' => 'box',
+      'class' => 'facebook_pull_box',
+      'file' => 'facebook_pull_box.inc',
+      'path' => $path,
+    )
+  );
+  return $info;
+}
+
+
+/**
+ * Form: Administration page settings.
+ */
+function facebook_pull_settings($form_state) {
+  $form = array();
+
+  $application_id = l(t('Application ID'), 'https://developers.facebook.com/apps');
+  $form['facebook_pull_app_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('App ID'),
+    '#default_value' => t(variable_get('facebook_pull_app_id', '')),
+    '#description' => t('Unique !application_id for your facebook app.', array('!application_id' => $application_id)),
+  );
+
+  $form['facebook_pull_app_secret'] = array(
+    '#type' => 'textfield',
+    '#title' => t('App Secret'),
+    '#default_value' => t(variable_get('facebook_pull_app_secret', '')),
+    '#description' => t('Your sites app secret.'),
+  );
+
+  $graph_link = l(t('Graph ID'), 'http://developers.facebook.com/docs/reference/api/');
+  $form['facebook_pull_graph_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Graph ID'),
+    '#default_value' => t(variable_get('facebook_pull_graph_id', '')),
+    '#description' => t('The !graph_id of the page, user, or group.', array('!graph_id' => $graph_link)),
+  );
+
+  $form['facebook_pull_object_type'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Object type'),
+    '#default_value' => t(variable_get('facebook_pull_object_type', '')),
+    '#description' => t('The object type to pull, e.g. friends, feed, photos.'),
+  );
+
+  $form['facebook_pull_limit'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Limit'),
+    '#size' => 5,
+    '#default_value' => t(variable_get('facebook_pull_limit', '')),
+    '#description' => t('How many posts to show in the box by default. If you have not entered a default limit here then it will default to 10.'),
+  );
+
+  return system_settings_form($form);
+}
+
+
+/**
+ * Serve up a facebook feed from the cache
+ */
+function facebook_pull_render($graph_id, $type, $app_id, $app_secret, $options = array()) {
+  $data = _facebook_pull_feed_cached($graph_id, $type, $app_id, $app_secret, $options);
+  if (!$data) {
+    return '';
+  }
+  return theme('facebook_pull_feed', array('items' => $data));
+}
+
+
+/**
+ * Serve up facebook notes
+ */
+function facebook_pull_notes($id, $key, $viewer = 0, $limit = 5) {
+  $data = _facebook_pull_notes_cached($id, $key, $viewer);
+  if (!$data) {
+    return '';
+  }
+  $feed = simplexml_load_string($data);
+  $entries = array();
+  for ($i = 0; $i < $limit; $i++) {
+    $entries[] = $feed->entry[$i];
+  }
+  return theme('facebook_pull_notes', array('feedid' => $id, 'items' => $entries));
+}
+
+
+/**
+ * Pull the notes but check the cache first
+ */
+function _facebook_pull_notes_cached($id, $key, $viewer = 0) {
+  $cache_key = sprintf("%s-%s-%s", $id, $key, $viewer);
+  $cache = cache_get($cache_key);
+
+  if (!$cache || $cache->created > time() + FACEBOOK_PULL_CACHETIME) {
+    $data = _facebook_pull_notes($id, $key, $viewer);
+    cache_set($cache_key, $data, 'cache', CACHE_TEMPORARY);
+  } else {
+    $data = $cache->data;
+  }
+
+  return $data;
+}
+
+
+/**
+ * We need a specific way to access notes, as they are currently not available
+ * due to the following bug in the facebook graph.
+ *
+ * http://bugs.developers.facebook.net/show_bug.cgi?id=18266
+ */
+function _facebook_pull_notes($id, $key, $viewer = 0) {
+  $data = array('id' => $id, 'viewer' => $viewer, 'key' => $key, 'format' => 'atom10');
+  $qs = http_build_query($data, '', '&');
+  $url = 'http://www.facebook.com/feeds/notes.php?' . $qs;
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+  ob_start(); curl_exec($ch); $raw = ob_get_contents(); ob_end_clean(); // HBD
+  curl_close($ch);
+
+  return $raw;
+}
+
+
+/**
+ * Pull data from a facebook feed and cache it
+ */
+function _facebook_pull_feed_cached($graph_id, $type, $app_id, $app_secret, $options = array()) {
+  $cache_key = sprintf("%s-%s-%s", $graph_id, $type, http_build_query($options, '', '-'));
+  $cache = cache_get($cache_key);
+
+  if (!$cache || $cache->created > time() + FACEBOOK_PULL_CACHETIME) {
+    $token = _facebook_pull_accesstoken($app_id, $app_secret);
+    $data = _facebook_pull_feed($graph_id, $type, $token, $options);
+    cache_set($cache_key, $data, 'cache', CACHE_TEMPORARY);
+  } else {
+    $data = $cache->data;
+  }
+
+  return $data;
+}
+
+
+/**
+ * Pull data from a facebook feed
+ */
+function _facebook_pull_feed($graph_id, $type, $token, $options = array()) {
+  $qs = http_build_query($options, '', '&');
+  $url = "https://graph.facebook.com/%s/%s?%s&%s";
+  $fullurl = sprintf($url, $graph_id, $type, $token, $qs);
+  $raw = file_get_contents($fullurl);
+  $data = json_decode($raw);
+  if (!isset($data->data)) {
+    $message = 'Failed to fetch data from the Facebook Graph';
+    $variables = array();
+    watchdog('facebook_pull', $message, $variables, WATCHDOG_WARNING);
+    return FALSE;
+  }
+  return $data->data;
+}
+
+
+/**
+ * Get an access token
+ */
+function _facebook_pull_accesstoken($app_id, $app_secret) {
+  $endpoint = 'https://graph.facebook.com/oauth/access_token?client_id=%s&client_secret=%s&grant_type=client_credentials';
+
+  $fullurl = sprintf($endpoint, $app_id, $app_secret);
+  $token = file_get_contents($fullurl);
+  if (!$token) {
+    $message = 'Failed to fetch data from the Facebook Graph';
+    $variables = array();
+    watchdog('facebook_pull', $message, $variables, WATCHDOG_WARNING);
+    return FALSE;
+  }
+
+  return $token;
+}
+
+/**
+ * Render a single block using the configured settings.
+ */
+function _facebook_pull_render_block() {
+  $app_id = variable_get('facebook_pull_app_id', '');
+  $app_secret = variable_get('facebook_pull_app_secret', '');
+  $graph_id = variable_get('facebook_pull_graph_id', '');
+  $type = variable_get('facebook_pull_object_type', '');
+  $limit = variable_get('facebook_pull_limit', '');
+
+  return facebook_pull_render($graph_id, $type, $app_id, $app_secret, $options = array('limit' => $limit));
+}

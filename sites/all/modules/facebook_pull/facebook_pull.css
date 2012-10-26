@@ -1,0 +1,13 @@
+ul.facebook-feed { list-style-type: none; margin: 0; padding: 0; background: none; }
+ul.facebook-feed li { list-style-type: none; margin: 0 0 10px 0; padding: 0; }
+ul.facebook-feed .facebook-feed-picture { float: left; margin-right: 5px; margin-bottom: 2px; }
+ul.facebook-feed .facebook-feed-from { font-weight: bold; }
+ul.facebook-feed .facebook-feed-from a { color: #3B5998; }
+ul.facebook-feed .facebook-feed-time { display: block; color: #666; clear: both; }
+
+ul.facebook-feed { list-style-type: none; margin: 0; padding: 0; background: none; }
+ul.facebook-feed li { list-style-type: none; margin: 0 0 10px 0; padding: 0; }
+ul.facebook-feed .facebook-note-picture { float: left; margin-right: 5px; margin-bottom: 2px; }
+ul.facebook-feed .facebook-note-title { font-weight: bold; }
+ul.facebook-feed .facebook-note-from a { color: #3B5998; }
+ul.facebook-feed .facebook-note-time { display: block; color: #666; clear: both; }
