@@ -202,7 +202,7 @@ HRBOT.Sitewide.Controller = (function($) {
 	var Event = {
 	    
 	    callGoogleMap: function callGoogleMap() {
-		    if (Validation.validateBodyClass('page-node-18')) {
+		    if (Validation.validateBodyClass('page-node-18') || Validation.validateBodyClass('page-node-126')) {
 		        View.createGoogleMap();
 		    }
 		},
@@ -246,8 +246,8 @@ HRBOT.Sitewide.Controller = (function($) {
 	return {
 
 		init: function init() {
-      Event.callGoogleMap();
-      Event.createTabs()
+      		Event.callGoogleMap();
+      		Event.createTabs()
 			Event.bind();
 			
 			

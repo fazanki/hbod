@@ -146,7 +146,6 @@ header#header section#block-locale-language li.en a:hover {
   background-position: -36px 0;
 }
 header#header #block-views-slideshow-heading-block {
-  float: right;
   margin-top: 1px;
   position: relative;
 }
@@ -155,36 +154,21 @@ header#header #block-views-slideshow-heading-block span {
   display: block;
   background-color: white;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #d6efdc));
-  background-image: -webkit-linear-gradient(left, white, #d6efdc);
-  background-image: -moz-linear-gradient(left, white, #d6efdc);
-  background-image: -ms-linear-gradient(left, white, #d6efdc);
-  background-image: -o-linear-gradient(left, white, #d6efdc);
-  background-image: linear-gradient(left, white, #d6efdc);
-  -webkit-box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);
-  -moz-box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);
-  box-shadow: 1px 1px 4px 1px rgba(136, 136, 124, 0.4);
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
-  -ms-border-top-right-radius: 10px;
-  -o-border-top-right-radius: 10px;
-  border-top-right-radius: 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  -moz-border-bottom-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  -ms-border-bottom-left-radius: 10px;
-  -o-border-bottom-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  background-image: -webkit-linear-gradient(right, white, #d6efdc);
+  background-image: -moz-linear-gradient(right, white, #d6efdc);
+  background-image: -ms-linear-gradient(right, white, #d6efdc);
+  background-image: -o-linear-gradient(right, white, #d6efdc);
+  background-image: linear-gradient(right, white, #d6efdc);
   padding: 3px 10px;
-  text-transform: capitalize;
+  width: 990px;
 }
 header#header #block-views-slideshow-heading-block .slideShowTitle {
   top: 130px;
   right: 5px;
 }
 header#header #block-views-slideshow-heading-block .slideShowCaption {
-  top: 160px;
-  right: 5px;
+  top: 0px;
+  left: 0px;
 }
 
 body.sidebar-second section#main {

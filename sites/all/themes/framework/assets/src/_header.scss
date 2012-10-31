@@ -127,16 +127,17 @@ header#header {
         img {
           // @include box-shadow(0px 2px 4px 3px hsla(61, 5%, 51%, 0.40));
         }
-        float:right;
+    
         margin-top:1px;
         position:relative;
         span {
              position:absolute;
              display:block;
-             @include linear-gradient(left, #fff, #d6efdc);
-             @include border-radius-2(true);
+             @include linear-gradient(right, #fff, #d6efdc);
+            // @include border-radius-2(true);
              padding:3px 10px;
-             text-transform:capitalize;
+            
+             width:990px;
         }
         .slideShowTitle{
             top:130px;
@@ -145,8 +146,8 @@ header#header {
         }
     
         .slideShowCaption{
-            top:160px;
-            right:5px;
+            top:0px;
+            left:0px;
         
         }
     }
