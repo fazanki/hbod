@@ -65,7 +65,7 @@ HRBOT.Sitewide.View = (function($) {
 	var View = {
 		createGoogleMap: function createGoogleMap () {
 		    
-            var myLatlng = new google.maps.LatLng(45.80714,15.96926);
+            var myLatlng = new google.maps.LatLng(45.807025,15.970881);
             var myOptions = {
                 zoom: 16,
                 center: myLatlng,
