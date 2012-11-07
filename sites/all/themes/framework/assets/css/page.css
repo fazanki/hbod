@@ -704,11 +704,9 @@ section#main div.porodice ul li a {
   text-transform: uppercase;
   text-decoration: none;
   display: block;
-  width: 100px;
-  height: 60px;
   text-align: center;
   background: #ccc;
-  padding-top: 40px;
+  padding: 10px 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;

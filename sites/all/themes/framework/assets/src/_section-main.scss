@@ -206,11 +206,9 @@ section#main{
                     text-transform:uppercase;
                     text-decoration:none;
                     display:block;
-                    width:100px;
-                    height:60px;
                     text-align:center;
                     background:#ccc;
-                    padding-top:40px;
+                    padding:10px 20px;
                     @include border-radius(5px);
                     border:1px solid #ccc;
                     &:hover{
