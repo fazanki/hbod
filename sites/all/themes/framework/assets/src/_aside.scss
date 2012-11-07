@@ -1,7 +1,7 @@
 aside#sidebar-second {
         
     #block-views-plant-gallery-block-1 {
-        @include border-radius-2(true);
+       // @include border-radius-2(true);
         margin-top:20px; 
         .views-slideshow-controls-bottom {
             display:none;
@@ -41,15 +41,15 @@ aside#sidebar-second {
         }
         h3, h4 {
             position:absolute;
-            right:10px;
+            right:0px;
             background:#fff;
             padding:2px;
         }
         h3 {
             top:270px;
             @include linear-gradient(left, #fff, #d6efdc);
-            @include border-radius-2(true);
-            padding-left:10px;
+            //@include border-radius-2(true);
+            padding:5px 20px;
 
         }
         
@@ -57,14 +57,14 @@ aside#sidebar-second {
             top:265px;
         }
         img {
-            @include border-radius-2(false);
+            //@include border-radius-2(false);
         }
     }
     
-    #block-views-dogadanja-activnosti-block {
+    #block-views-forum-block-block {
         margin-top:20px;
        
-        @include border-radius-2(true);
+        //@include border-radius-2(true);
         border:1px solid $heading-color;
         margin-bottom:20px;
         
@@ -89,8 +89,17 @@ aside#sidebar-second {
           list-style:none;
           padding:0;
           margin:0;
+
+          li:hover {
+            background:#ccc;
+          }
           li {
             border-bottom:1px solid #ccc;
+            padding:10px;
+            a {
+                text-decoration:none;
+                color:#666;
+            }
           }
         }
     }

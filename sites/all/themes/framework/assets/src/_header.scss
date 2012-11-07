@@ -21,11 +21,13 @@ header#header {
         position:absolute;
         top:0px;
         left:-60px;
+        padding-bottom:31px;
+        background:url('../img/logo_shadow.png') 0 bottom no-repeat;
         img {
            // @include box-shadow(2px 2px 3px 2px hsla(61, 5%, 51%, 0.30));
             width:60px;
             @include border-top-left-radius(10px);
-            @include border-bottom-left-radius(10px);
+            //@include border-bottom-left-radius(10px);
         }
 
     }
@@ -128,27 +130,30 @@ header#header {
           // @include box-shadow(0px 2px 4px 3px hsla(61, 5%, 51%, 0.40));
         }
     
-        margin-top:1px;
+       
         position:relative;
         span {
              position:absolute;
              display:block;
-             @include linear-gradient(right, #fff, #d6efdc);
-            // @include border-radius-2(true);
-             padding:3px 10px;
-            
-             width:990px;
+           @include background-image(linear-gradient(left, transparent 20%,  white));
+            //@include border-bottom-right-radius(10px);
+            padding:4px 20px;
+            opacity: 0.6;
+            font-weight: bold;
+            font-size:15px;
+            width:950px;
         }
         .slideShowTitle{
             top:130px;
             right:5px;
+           
         
         }
     
         .slideShowCaption{
             top:0px;
-            left:0px;
-        
+            right:0px;
+            text-align:right;
         }
     }
 }
