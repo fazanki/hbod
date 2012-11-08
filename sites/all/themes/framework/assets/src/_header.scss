@@ -21,8 +21,9 @@ header#header {
         position:absolute;
         top:0px;
         left:-60px;
-        padding-bottom:31px;
-        background:url('../img/logo_shadow.png') 0 bottom no-repeat;
+        padding-bottom:200px;
+        background:url('../img/logo_shadow.png') 0 67px no-repeat;
+        //@include linear-gradient(bottom, transparent 20%,  white);
         img {
            // @include box-shadow(2px 2px 3px 2px hsla(61, 5%, 51%, 0.30));
             width:60px;

@@ -191,8 +191,23 @@ section#main{
                 }
             }
         }
+
+
     }
     
+    form#user-login, #user-register-form, #user-pass {
+        input[type='text'], input[type='password'] {
+            @include text-input;
+        }
+
+        input[type='submit'] {
+            @include button(shiny, #c1d9f5);
+            padding:10px 50px;
+            text-transform:uppercase;
+        }
+    }
+
+
     // gallery
     div.porodice {
         ul {
