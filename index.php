@@ -14,6 +14,10 @@
 /**
  * Root directory of Drupal installation.
  */
+
+ini_set('allow_fopen_url','On');
+ini_set('allow_url_fopen','On');
+
 define('DRUPAL_ROOT', getcwd());
 
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
