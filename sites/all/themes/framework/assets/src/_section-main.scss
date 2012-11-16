@@ -67,9 +67,9 @@ section#main{
     }
     article.graditent {
         @include linear-gradient(bottom, #fff, #d6d6d6);
-        // background-image:url('../img/grass.png');
-        // background-image-position:0 bottom;
-        // background-image-repeat:repeat-x;
+        background-image:url('../img/grass.png');
+        background-image-position:0 bottom;
+        background-image-repeat:repeat-x;
     }
     article {
         @include border-radius-2(true);
