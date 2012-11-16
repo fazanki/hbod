@@ -66,14 +66,19 @@ section#main{
         }
     }
     article.graditent {
-        @include linear-gradient(left, #f0f0f0, #d6d6d6);
+        @include linear-gradient(bottom, #fff, #d6d6d6);
+        // background-image:url('../img/grass.png');
+        // background-image-position:0 bottom;
+        // background-image-repeat:repeat-x;
     }
     article {
         @include border-radius-2(true);
-        
+        background:url('../img/grass.png') 0 bottom repeat-x;
+
         h2 {
             @include h2-teaser-box;
         }
+        padding-bottom:10px;
         .content {
             .field-name-body {
                 float:right;
