@@ -23,6 +23,7 @@ header#header {
         left:-60px;
         padding-bottom:200px;
         width:90px;
+        z-index: 2000;
         background:url('../img/logo-flower.png') 0 67px no-repeat;
         //@include linear-gradient(bottom, transparent 20%,  white);
         img {
