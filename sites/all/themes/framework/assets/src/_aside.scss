@@ -1,7 +1,7 @@
 aside#sidebar-second {
         
     #block-views-plant-gallery-block-1 {
-        @include border-radius-2(true);
+        //@include border-radius-2(true);
         margin-top:20px; 
         .views-slideshow-controls-bottom {
             display:none;
@@ -57,7 +57,7 @@ aside#sidebar-second {
             top:265px;
         }
         img {
-            //@include border-radius-2(false);
+            @include border-radius-2(false);
         }
     }
     
