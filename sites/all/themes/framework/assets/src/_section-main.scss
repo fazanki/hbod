@@ -247,15 +247,23 @@ section#main{
                 float:left;
                 list-style-type:none;
                 width:184px;
-                height:290px;
+                height:270px;
                 background:#d6efdc;
                 margin-right:0px;
                 border-right:1px solid #999 ;
                 .views-field-field-latin-name, .views-field-title {
                   padding:0 5px;
+                  font-weight: bold;
+                  font-style: italic; 
+                }
+                .views-field-field-autor-fotografije- {
+                    margin:10px 0 0 5px;
+                    .field-content {
+                        font-style: italic;
+                    }
                 }
                 .views-label {
-                    font-weight:bold;
+                   
                 }
             }
         }
