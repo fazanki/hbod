@@ -47,8 +47,10 @@ aside#sidebar-second {
         }
         h3 {
             top:270px;
-            @include background-image(linear-gradient(left, transparent 80%,  white));
+            @include background-image(linear-gradient(left, transparent 5%,  white));
             //@include border-radius-2(true);
+            font-weight: bold;
+            font-style:italic; 
             padding:5px 20px;
            
             width:auto;
