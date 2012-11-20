@@ -229,6 +229,23 @@ HRBOT.Sitewide.Controller = (function($) {
 		   window.location = hitlink;
 		},
 		
+		callFacebookFeed: function () {
+
+			$.getJSON('https://graph.facebook.com/index/feed?access_token=365711886855103|fcXIIWs6W_pkWItIIFpbLe4BHm4', function(data) {
+  				var items = [];
+  				//debugger;
+  				$.each(data, function(key, val) {
+    				items.push('<li id="' + key + '">' + val + '</li>');
+  				});
+
+  				$('<ul/>', {
+    				'class': 'my-new-list',
+    				html: items.join('')
+  				})
+  				//.appendTo('body');
+			});
+
+		},
 
 		bind: function bind() {
 			$('article.node').hover(
@@ -246,9 +263,11 @@ HRBOT.Sitewide.Controller = (function($) {
 	return {
 
 		init: function init() {
+			Event.callFacebookFeed();
       		Event.callGoogleMap();
       		Event.createTabs()
 			Event.bind();
+			//Event.callFacebookFeed():
 			
 			
 

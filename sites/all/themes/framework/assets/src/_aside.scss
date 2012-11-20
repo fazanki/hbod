@@ -1,7 +1,7 @@
 aside#sidebar-second {
         
     #block-views-plant-gallery-block-1 {
-       // @include border-radius-2(true);
+        @include border-radius-2(true);
         margin-top:20px; 
         .views-slideshow-controls-bottom {
             display:none;
@@ -47,7 +47,7 @@ aside#sidebar-second {
         }
         h3 {
             top:270px;
-            @include linear-gradient(left, #fff, #d6efdc);
+            @include background-image(linear-gradient(left, transparent 20%,  white));
             //@include border-radius-2(true);
             padding:5px 20px;
 

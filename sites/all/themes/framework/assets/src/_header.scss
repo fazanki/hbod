@@ -136,9 +136,9 @@ header#header {
        
         position:relative;
         span {
-             position:absolute;
-             display:block;
-           @include background-image(linear-gradient(left, transparent 20%,  white));
+            position:absolute;
+            display:block;
+            @include background-image(linear-gradient(left, transparent 20%,  white));
             //@include border-bottom-right-radius(10px);
             padding:4px 20px;
             opacity: 0.8;

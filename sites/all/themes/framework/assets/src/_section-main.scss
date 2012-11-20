@@ -332,6 +332,54 @@ section#main{
              @include button(shiny, #70be8a);
              float:right;
         }
+    }
+
+    .externalLinks {
+        ul {
+            @include clearfix;
+            li:nth-child(2n) {
+                background:#cdcdcd;
+
+            }
+            li {
+                @include clearfix;
+                list-style: none;
+                padding:5px;
+                .views-field-title {
+                    float:left;
+                    clear:left;
+                    width:400px;
+                    span {
+                        font-weight:bold;
+                    }
+                }
+                .views-field-field-list-description {
+                    float:left;
+                    clear:left;
+                    width:400px;
+                }
+
+                .views-field-field-url-link {
+                    float:left;
+                    a {
+                        color:$heading-color;
+                    }
+                }
+            }
+        }
+    }
+
+    #block-views-clanovi-block-1 {
+        a {
+            color:$heading-color;
+        }
+        table {
+            border:1px solid $heading-color;
+        }
+        td, th {
+            padding:3px;
+            border-right: 1px solid $heading-color;
+        }
     }    
     
 }
