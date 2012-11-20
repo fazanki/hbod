@@ -47,10 +47,11 @@ aside#sidebar-second {
         }
         h3 {
             top:270px;
-            @include background-image(linear-gradient(left, transparent 20%,  white));
+            @include background-image(linear-gradient(left, transparent 80%,  white));
             //@include border-radius-2(true);
             padding:5px 20px;
-
+           
+            width:auto;
         }
         
         h4 {
