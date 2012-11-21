@@ -19,17 +19,17 @@ header#header {
     height:291px;
     #logo {
         position:absolute;
-        top:-2px;
-        left:-58px;
+        top:0px;
+        left:0px;
         padding-bottom:200px;
         width:90px;
-        z-index: 2000;
-        background:url('../img/logo-flower.png') 0 57px no-repeat;
+        //z-index: 2000;
+        ///background:url('../img/logo-flower.png') 0 57px no-repeat;
         //@include linear-gradient(bottom, transparent 20%,  white);
         img {
            // @include box-shadow(2px 2px 3px 2px hsla(61, 5%, 51%, 0.30));
-            width:60px;
-            @include border-top-left-radius(10px);
+            width:34px;
+            //@include border-top-left-radius(10px);
             //@include border-bottom-left-radius(10px);
         }
 
@@ -69,7 +69,7 @@ header#header {
         h1 {
             
             margin-top:10px;
-           
+            padding-left:34px;
             a {     
                 color:$heading-color;
                 font-size:1.5em;
