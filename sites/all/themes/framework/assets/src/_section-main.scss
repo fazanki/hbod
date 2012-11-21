@@ -107,7 +107,9 @@ section#main{
         border-bottom:1px solid $heading-color;
         border-right:1px solid $heading-color;
         padding:10px;
-       
+        strong {
+            font-weight: bold;
+        }
         ol, ul {
             margin-left:20px;
            
