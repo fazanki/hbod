@@ -388,6 +388,12 @@ section#main{
             padding:3px;
             border-right: 1px solid $heading-color; 
         }
+    }
+
+    footer {
+        ul.links {
+            display:none;
+        }
     }    
     
 }
