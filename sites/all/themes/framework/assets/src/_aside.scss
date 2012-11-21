@@ -3,6 +3,12 @@ aside#sidebar-second {
     #block-views-plant-gallery-block-1 {
         //@include border-radius-2(true);
         margin-top:20px; 
+        h2 {
+            color: $heading-color;
+            font-weight: bold;
+            margin-bottom:5px;
+            text-transform: uppercase;
+        }
         .views-slideshow-controls-bottom {
             display:none;
             position:absolute;
