@@ -392,11 +392,20 @@ section#main{
     }
 
     #block-views-clanovi-block-1 {
+        margin-top:20px;
+        @include border-radius-2(true);
+        h2 {
+            @include h2-teaser-box;
+        }
+        .content {
+            margin-top:-20px;
+        }
         a {
             color:$heading-color;
         }
         table {
-            border:1px solid $heading-color;
+            border-left:1px solid $heading-color;
+            border-right:1px solid $heading-color;
         }
         td, th {
             padding:3px;
