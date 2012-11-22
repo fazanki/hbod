@@ -1,6 +1,30 @@
 
 
 body.sidebar-second {
+	aside#sidebar-second {
+	    float:right;
+	    margin: 0 10px 0 0;
+	    padding: 0;
+	    width: 220px;
+	}
+	#container { 
+        font-size:$body-font-size;
+        @include box-shadow(0px 0px 10px 3px hsla(120, 33%, 30%, 0.60));
+        @include border-bottom-radius(5px);
+        background:#fff;
+        padding:0px 0 0 0;
+        position:relative;
+        z-index:100;
+
+        margin: 0 auto;
+  		//padding: 0 10px;
+  		width: 1000px;
+        p {
+            margin:10px 0;
+        }
+        
+    }
+
     section#main {
         width:740px;
     }

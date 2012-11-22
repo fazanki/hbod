@@ -64,9 +64,7 @@ th { padding-right: 1em; }
  */
 
 #container {
-  margin: 0 auto;
-  padding: 0 10px;
-  width: 990px;
+ 
 }
 
 /**
@@ -137,10 +135,7 @@ body.sidebar-first #sidebar-first {
 /* 2 columns: sidebar-second */
 
 body.sidebar-second #sidebar-second {
-  float: right;
-  margin: 0;
-  padding: 0;
-  width: 220px;
+  
 }
 
 /**

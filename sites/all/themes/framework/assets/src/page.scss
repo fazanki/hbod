@@ -78,19 +78,6 @@ body.html {
         opacity:0.8;
         display:none;
     }
-    #container { 
-        font-size:$body-font-size;
-        @include box-shadow(0px 0px 10px 3px hsla(120, 33%, 30%, 0.60));
-        @include border-bottom-radius(5px);
-        background:#fff;
-        padding:0px 0 0 0;
-        position:relative;
-        z-index:100;
-        p {
-            margin:10px 0;
-        }
-        
-    }
     nav.breadcrumb {
         text-transform:uppercase;
         border-top:1px solid #dae6f5;

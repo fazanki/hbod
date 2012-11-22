@@ -119,6 +119,7 @@ header#header {
         }
         
         li.en {
+            display: none;
             a {
                 background-position:0 0;
                 &:hover {
