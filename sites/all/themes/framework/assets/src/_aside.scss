@@ -72,7 +72,7 @@ aside#sidebar-second {
     
     #block-views-forum-block-block {
         margin-top:20px;
-       
+        @include border-radius-2(false);
         //@include border-radius-2(true);
         border:1px solid $heading-color;
         margin-bottom:20px;
@@ -108,6 +108,9 @@ aside#sidebar-second {
             a {
                 text-decoration:none;
                 color:#666;
+            }
+            &:last-child {
+                border-bottom:none;
             }
           }
         }
