@@ -399,7 +399,43 @@ section#main{
 
     footer {
         ul.links {
-            display:none;
+            li.translation_en {
+                display:none;
+            }
+            li.comment-add {
+                a {
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    color:$heading-color;
+                    margin-top:20px;
+                    display: block;
+                }
+            }
+        }   
+    }
+
+    section#comments {
+        article {
+            padding:10px;
+            a {
+                color:$heading-color;
+                font-weight:bold;
+                text-decoration: none;
+                &:hover {
+                    text-decoration:underline;
+                }
+            }
+        }
+    }
+    article.comment {
+        padding:10px;
+        a {
+            color:$heading-color;
+            font-weight:bold;
+            text-decoration: none;
+            &:hover {
+                text-decoration:underline;
+            }
         }
     }    
     
