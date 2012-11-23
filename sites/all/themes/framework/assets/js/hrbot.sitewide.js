@@ -140,6 +140,11 @@ HRBOT.Sitewide.View = (function($) {
 		    $(this).removeClass('graditent')
 		},
 
+		placeholder: function placeholder($element, value) {
+			$element.attr('placeholder', value)
+
+		}
+
 	}
 
 	return {
@@ -228,22 +233,27 @@ HRBOT.Sitewide.Controller = (function($) {
 		   var hitlink = $(this).find('.node-readmore a').attr('href')
 		   window.location = hitlink;
 		},
+
+		addPlaceholder: function addPlaceholder() {
+			var value = ($('html').attr('lang') === 'en' || $('html').attr('lang') == undefined) ? "Search" : "Trazilica";
+			View.placeholder($("#edit-search-block-form--2"), value);
+		},
 		
 		callFacebookFeed: function () {
 
-			$.getJSON('https://graph.facebook.com/index/feed?access_token=365711886855103|fcXIIWs6W_pkWItIIFpbLe4BHm4', function(data) {
-  				var items = [];
-  				//debugger;
-  				$.each(data, function(key, val) {
-    				items.push('<li id="' + key + '">' + val + '</li>');
-  				});
+			// $.getJSON('https://graph.facebook.com/index/feed?access_token=365711886855103|fcXIIWs6W_pkWItIIFpbLe4BHm4', function(data) {
+  	// 			var items = [];
+  	// 			//debugger;
+  	// 			$.each(data, function(key, val) {
+   //  				items.push('<li id="' + key + '">' + val + '</li>');
+  	// 			});
 
-  				$('<ul/>', {
-    				'class': 'my-new-list',
-    				html: items.join('')
-  				})
-  				//.appendTo('body');
-			});
+  	// 			$('<ul/>', {
+   //  				'class': 'my-new-list',
+   //  				html: items.join('')
+  	// 			})
+  	// 			//.appendTo('body');
+			// });
 
 		},
 
@@ -263,10 +273,11 @@ HRBOT.Sitewide.Controller = (function($) {
 	return {
 
 		init: function init() {
-			Event.callFacebookFeed();
+			//Event.callFacebookFeed();
       		Event.callGoogleMap();
       		Event.createTabs()
 			Event.bind();
+			Event.addPlaceholder();
 			//Event.callFacebookFeed():
 			
 			

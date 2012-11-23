@@ -99,16 +99,23 @@ body.html {
         @include linear-gradient(right, #dae6f5, #fff);
         margin-top:10px;
         padding:3px 0 2px 0;
-        
+        position:relative;
         input[type='submit'] {
-            @include button(pill, #c1d9f5); 
-            text-transform:uppercase;
+            text-indent: -9999px;
+            background:url('../img/search-icon.png') 0 0 no-repeat;
+            border:none;
+            width:40px;
+            height:20px;
+            position:absolute;
+            right:-15px;
+            top:5px;
+            cursor:pointer;
         }
         input[type='search'] {
             border:none;
             border:1px solid #199b44 !important;
             @include box-shadow(2px 2px 3px 1px hsla(61, 5%, 51%, 0.40));
-            width:132px;
+            width:195px;
            
         }
     }
