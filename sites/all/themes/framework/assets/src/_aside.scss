@@ -142,9 +142,12 @@ aside#sidebar-second {
         li {
             list-style:none;
             border-bottom:1px solid #ccc;
+            margin:0;
+            padding:0;
             a {
                 color:$heading-color !important;
                 text-transform: uppercase;
+                padding:3px 0;
             }
         }
     }
