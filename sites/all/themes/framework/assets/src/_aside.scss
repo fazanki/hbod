@@ -139,7 +139,14 @@ aside#sidebar-second {
             font-weight: bold;
             border-bottom:1px solid #ccc;
         }
+        ul {
+            margin:0;
+            padding:0;
+        }
         li {
+            &:last-child {
+                border-bottom:none;
+            }
             list-style:none;
             border-bottom:1px solid #ccc;
             margin:0;
@@ -148,6 +155,7 @@ aside#sidebar-second {
                 color:$heading-color !important;
                 text-transform: uppercase;
                 padding:3px 0;
+                padding-left:10px;
             }
         }
     }
