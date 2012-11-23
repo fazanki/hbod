@@ -70,7 +70,7 @@ aside#sidebar-second {
         }
     }
     
-    #block-views-forum-block-block {
+    #block-views-forum-block-block, #block-comment-recent{
         margin-top:20px;
         @include border-radius-2(false);
         //@include border-radius-2(true);
@@ -113,6 +113,39 @@ aside#sidebar-second {
                 border-bottom:none;
             }
           }
+        }
+    }
+
+    #block-comment-recent {
+       background:#DAE6F5;
+       a {
+            color:$heading-color !important;
+       }
+    }
+    #block-user-online {
+        @include border-radius-2(false);
+        border:1px solid $heading-color;
+        background:#DAE6F5;
+        margin-bottom:20px;
+        h2 {
+          font-weight:bold;
+          color:$heading-color;
+          margin:0;
+          padding:7px 5px;
+          border-bottom:1px solid  $heading-color;
+        }
+        p {
+            padding:5px;
+            font-weight: bold;
+            border-bottom:1px solid #ccc;
+        }
+        li {
+            list-style:none;
+            border-bottom:1px solid #ccc;
+            a {
+                color:$heading-color !important;
+                text-transform: uppercase;
+            }
         }
     }
 }
