@@ -1,0 +1,83 @@
+section#main {
+	footer {
+        ul.links {
+            li.translation_en {
+                display:none;
+            }
+            li.comment-add {
+                a {
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    color:$heading-color;
+                    margin-top:20px;
+                    display: block;
+                }
+            }
+        }   
+    }
+
+    section#comments {
+        article {
+            padding:10px;
+            a {
+                color:$heading-color;
+                font-weight:bold;
+                text-decoration: none;
+                &:hover {
+                    text-decoration:underline;
+                }
+            }
+        }
+    }
+
+    section#comment-form-wrapper {
+        @include border-radius-2(true);
+        h2 {
+            @include h2-teaser-box;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        form {
+            padding:10px;
+            a.username {
+                text-transform:uppercase;
+                color:$heading-color;
+            }
+        }
+    }
+    article.comment {
+        padding:10px;
+        a {
+            color:$heading-color;
+            font-weight:bold;
+            text-decoration: none;
+            &:hover {
+                text-decoration:underline;
+            }
+        }
+    }
+
+    .action-links {
+        list-style:none;
+
+        margin:20px 0;
+        a {
+            color:$heading-color;
+        }
+    }
+
+    div#forum {
+        th {
+            font-weight: bold;
+        }
+        a {
+            color:$heading-color;
+            font-weight:bold;
+            padding:3px 0; 
+        }
+        td {
+            padding:5px;
+        }
+    }    
+
+}
