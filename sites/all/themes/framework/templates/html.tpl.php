@@ -8,6 +8,11 @@
   <!-- Set the viewport width to device width for mobile -->
   <meta name="viewport" content="width=device-width" />
   <title><?php print $head_title; ?></title>
+  <meta name="title" content="Hrvatsko botaničko društvo – botaničari Hrvatske" />
+  <meta name="description" content="Djelovanje društva usmjereno je k promicanju i razvitku botaničkih znanosti na popularnoj, stručnoj i znanstvenoj razini preko projekata i predavanja. Društvo se zalaže za očuvanje i zaštitu flore, vegetacije i staništa te ukupne biološke raznolikosti Hrvatske. Ono sudjeluje u povezivanju i poticanju stručne i znanstvene suradnje sa studentskim, građanskim i drugim organizacijama na Sveučilištu, Republici Hrvatskoj i svijetu." />
+  <meta name="keywords" content="Hrvatsko botaničko društvo, botaničko društvo, botanika, botaničari, udruga, strukovna udruga, Zagreb, Botanički vrt" />
+  <meta name="language" content="<?php print $language->language; ?>" />
+  <meta name="robots" content="index, follow, NOODP" />
   <?php print $styles; ?>
   
   
