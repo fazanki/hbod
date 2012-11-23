@@ -235,7 +235,7 @@ HRBOT.Sitewide.Controller = (function($) {
 		},
 
 		addPlaceholder: function addPlaceholder() {
-			var value = ($('html').attr('lang') === 'en' || $('html').attr('lang') == undefined) ? "Search" : "Trazilica";
+			var value = ($('html').attr('lang') === 'en' || $('html').attr('lang') == undefined) ? "Search" : "Tražilica";
 			View.placeholder($("#edit-search-block-form--2"), value);
 		},
 		
