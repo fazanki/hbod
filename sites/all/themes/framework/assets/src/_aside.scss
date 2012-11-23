@@ -140,6 +140,7 @@ aside#sidebar-second {
             border-bottom:1px solid #ccc;
         }
         ul {
+            @include clearfix;
             margin:0;
             padding:0;
         }
