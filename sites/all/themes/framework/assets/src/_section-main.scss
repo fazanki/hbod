@@ -87,6 +87,10 @@ section#main{
                 p {
                     color:#333;
                 }
+                h3 {
+                    font-weight:bold;
+                    font-size:1.1em;
+                }
             }
             .field-type-image {
                 float:left;
@@ -113,6 +117,10 @@ section#main{
         ol, ul {
             margin-left:20px;
            
+        }
+        h3 {
+            font-weight: bold;
+            font-size:1.1em;
         }
         a {
             color:$heading-color;
