@@ -1,6 +1,7 @@
 @mixin headings-style ($font-size) {
     font-size:$font-size;
     color:$heading-color;
+    text-shadow: 1px 1px #ccc;
     text-transform:uppercase;
     font-weight:bold;
     margin:10px 0px 0 0 ;
@@ -9,8 +10,8 @@
     border-left:1px solid $heading-color;
     @include linear-gradient(left, #fff, $heading-color);
     @include border-top-right-radius(10px);
-    padding-left:10px;
     @include box-shadow(1px 1px 1px 1px hsla(61, 5%, 51%, 1));
+    padding-left:10px;
 }
 
 @mixin teaser-box {
