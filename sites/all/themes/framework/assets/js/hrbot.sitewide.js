@@ -143,7 +143,12 @@ HRBOT.Sitewide.View = (function($) {
 		placeholder: function placeholder($element, value) {
 			$element.attr('placeholder', value)
 
+		},
+
+		translate: function translate($what, value) {
+			$what.text(value);
 		}
+
 
 	}
 
@@ -238,6 +243,28 @@ HRBOT.Sitewide.Controller = (function($) {
 			var value = ($('html').attr('lang') === 'en' || $('html').attr('lang') == undefined) ? "Search" : "Tražilica";
 			View.placeholder($("#edit-search-block-form--2"), value);
 		},
+
+		addMenuTranslation: function addMenuTranslation() {
+			var lang = $('html').attr('lang'); 
+			var translationEn = {
+				'gallery' 	: 'gallery',
+				'casopisi' 	: 'journals',
+				'vidisve'	: 'see all',
+				'dodajslike': 'add your picture', 
+
+			}
+			if (lang === 'en') {
+				// translate Gallery
+				View.translate($('#menu-928-1 > a'), translationEn.gallery); 
+				// translate Casopisi 
+				View.translate($('#menu-881-1 > a'), translationEn.casopisi); 
+				// vidi sve 
+				View.translate($('#menu-976-1 > a'), translationEn.vidisve); 
+				// dodaj sliku
+				View.translate($('#menu-965-1 > a'), translationEn.dodajslike); 
+				
+			}	
+		},
 		
 		callFacebookFeed: function () {
 
@@ -278,7 +305,7 @@ HRBOT.Sitewide.Controller = (function($) {
       		Event.createTabs()
 			Event.bind();
 			Event.addPlaceholder();
-			//Event.callFacebookFeed():
+			//Event.addMenuTranslation();
 			
 			
 
