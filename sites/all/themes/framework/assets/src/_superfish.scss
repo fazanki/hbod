@@ -1,3 +1,4 @@
+
 #block-superfish-1 {
   //margin-left:5px;
   ul.sf-menu {
@@ -48,4 +49,14 @@ nav#navigation {
   padding-left:5px;
   z-index:5000;
   width:1010px;
+}
+
+body.i18n-en {
+  #block-superfish-1 {
+    #superfish-1{
+      a {
+        padding:15px 20px 15px 19px;
+      }
+    }
+  }
 }
