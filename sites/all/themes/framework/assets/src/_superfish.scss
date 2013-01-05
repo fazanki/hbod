@@ -26,7 +26,7 @@
      }
      
       a {
-          padding:15px 20px 15px 20px;
+          padding:15px 19px 15px 20px;
           font-size:13px;
           margin:0;
           color:#000;
@@ -42,13 +42,14 @@
 }
 nav#navigation {
   //background:$frame-bg-color;
+  //border:1px solid #f00;
   position:absolute;
-  left:0;
+  left:-3px;
   top:225px;
   width:auto;
   padding-left:5px;
   z-index:5000;
-  width:1010px;
+  width:1020px;
 }
 
 body.i18n-en {
