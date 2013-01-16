@@ -92,6 +92,9 @@ section#main{
                     font-size:1.1em;
                     margin-top:10px;
                 }
+                a {
+                    color:$heading-color
+                }
             }
             .field-type-image {
                 float:left;
