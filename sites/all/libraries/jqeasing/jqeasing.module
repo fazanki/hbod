@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Makes the 'jQuery Easing' plugin available to Drupal as a library.
+ */
+
+/**
+ * Implements hook_libraries_info().
+ */
+function jqeasing_libraries_info() {
+  $libraries['easing'] = array(
+    'name' => 'jQuery Easing',
+    'vendor url' => 'http://gsgd.co.uk/sandbox/jquery/easing/',
+    'download url' => 'http://gsgd.co.uk/sandbox/jquery/easing/',
+    'version arguments' => array(
+      'file' => 'jquery.easing.js',
+      'pattern' => '/jQuery\s+Easing\s+v?([0-9\.]+)/',
+    ),
+    'files' => array(
+      'js' => array(
+        'jquery.easing.js',
+      ),
+    ),
+  );
+
+  return $libraries;
+}

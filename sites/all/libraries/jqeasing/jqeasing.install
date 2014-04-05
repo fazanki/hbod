@@ -1,0 +1,33 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the jQuery Easing module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function jqeasing_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $library = libraries_detect('easing');
+
+    $requirements['jqeasing'] = array(
+      'title' => $t('jQuery Easing'),
+    );
+    if ($library['installed']) {
+      $requirements['jqeasing']['value'] = $library['version'];
+      $requirements['jqeasing']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['jqeasing']['value'] = $library['error'];
+      $requirements['jqeasing']['description'] = $library['error message'];
+      $requirements['jqeasing']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
+  return $requirements;
+}
+
