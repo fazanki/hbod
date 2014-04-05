@@ -38,9 +38,6 @@ function variable_realm_init() {
     }
     variable_realm_rebuild();
   }
-  // Refresh realm information, so if any module needs realm information after this,
-  // we'll get properly localized info.
-  drupal_static_reset('variable_realm_info');
 }
 
 /**
@@ -114,15 +111,27 @@ function variable_realm_params($realm_name = NULL) {
  * Get information about variable realms.
  */
 function variable_realm_info($realm_name = NULL) {
-  $realm_info = &drupal_static(__FUNCTION__);
-  if (!isset($realm_info)) {
-    $realm_info = _variable_realm_invoke_all('variable_realm_info');
+  $realm_info_tmp = $realm_info = &drupal_static(__FUNCTION__);
+
+  if (!isset($realm_info_tmp)) {
+    $realm_info_tmp = _variable_realm_invoke_all('variable_realm_info');
+
+    // If first param is NULL, module_load_all() only returns a boolean
+    // indicating whether all modules have been loaded.
+    if (module_load_all(NULL)) {
+      // Due to the fact that variable_realm_info() gets called by some
+      // modules and the menu access callbacks early in the bootstrap,
+      // we could not cache the realm info for later calls until all
+      // modules have been loaded.
+      $realm_info = $realm_info_tmp;
+    }
   }
+
   if ($realm_name) {
-    return isset($realm_info[$realm_name]) ? $realm_info[$realm_name] : array();
+    return isset($realm_info_tmp[$realm_name]) ? $realm_info_tmp[$realm_name] : array();
   }
   else {
-    return $realm_info;
+    return $realm_info_tmp;
   }
 }
 
@@ -239,10 +248,16 @@ function variable_realm_add($realm, $key, $values = array(), $weight = NULL, $re
  */
 function variable_realm_set($realm, $key, $name, $value, $rebuild = TRUE) {
   if ($store = variable_realm($realm, $key)) {
+    $old_value = variable_realm_get($realm, $key, $name);
     $store->variable_set($name, $value);
     if ($rebuild) {
       variable_realm_refresh($realm, $key, $name);
     }
+    $options = array(
+      'realm' => $store->realm,
+      'key' => $store->key,
+    );
+    module_invoke_all('variable_update', $name, $value, $old_value, $options);
   }
 }
 
@@ -585,6 +600,10 @@ function _variable_realm_invoke_all() {
   foreach (module_list() as $module) {
     if (module_hook($module, $hook) && $merge = call_user_func_array($module . '_' . $hook, $args)) {
       $result = drupal_array_merge_deep($result, $merge);
+      // Add module name to each of the realms provided by the module.
+      foreach (array_keys($merge) as $key) {
+        $result[$key] += array('module' => $module);
+      };
       unset($merge);
     }
   }
@@ -595,7 +614,7 @@ function _variable_realm_invoke_all() {
  * Implements hook_form_FORM_ID_alter()
  */
 function variable_realm_form_system_theme_settings_alter(&$form, &$form_state, $form_id) {
-  module_load_include('form.inc', 'variable_realm');
+  form_load_include($form_state, 'form.inc', 'variable_realm');
   $theme_variable = $form['var']['#value'];
   foreach (_variable_realm_variable_settings_form_list() as $realm_name => $variables) {
     if (in_array($theme_variable, variable_children($variables))) {

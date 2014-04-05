@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Installation file for Open Web Analytics module.
+ */
+
+function owa_install() {
+  variable_set('owa_visibility_roles', 0);
+  variable_set('owa_visibility', 0);
+
+  // Remove tracking from all administrative pages, see http://drupal.org/node/34970.
+  $pages = array(
+    'admin',
+    'admin/*',
+    'user/*/*',
+    'node/add*',
+    'node/*/*',
+  );
+  variable_set('owa_pages', implode("\n", $pages));
+}
+
+function owa_uninstall() {
+  variable_del('owa_account');
+  variable_del('owa_track_page_view');
+  variable_del('owa_track_clicks');
+  variable_del('owa_track_dom_stream');
+  variable_del('owa_track_across_domain');
+  variable_del('owa_roles');
+  variable_del('owa_visibility');
+  variable_del('owa_visibility_roles');
+  variable_del('owa_pages');
+}
+
+/**
+ * Implementation of hook_requirements().
+ */
+function owa_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Raise warning if Open Web Analytics user account has not been set yet.
+    if (variable_get('owa_account', '') == '') {
+      $requirements['owa'] = array(
+        'title' => t('Open Web Analytics module'),
+        'description' => t('Open Web Analytics module has not been configured yet. Please configure its settings from the <a href="@url">Open Web Analytics settings page</a>.', array('@url' => url('admin/settings/owa'))),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => t('Not configured'),
+      );
+    }
+  }
+
+  return $requirements;
+}

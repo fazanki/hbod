@@ -1,0 +1,16 @@
+// Casopisi, Journals
+body.page-node-218, body.page-node-219 {
+	section#main {
+		h1.title, .tabs-wrapper {
+			display:none;
+		}
+
+		> div.content {
+			display:none;
+		}
+
+		h2.block-title {
+			@include headings-style(1.5em);
+		} 
+	}
+}

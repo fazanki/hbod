@@ -415,12 +415,33 @@ function variable_hook_info() {
  * Form for variable list
  *
  * @param $list
- *   Variable name or list of variable names
+ *   Variable name or list of variable names.
+ * @param $options
+ *   Optional array with variable options.
  */
-function variable_edit_form($form, $form_state, $list, $options = array()) {
-  module_load_include('form.inc', 'variable');
+function variable_edit_form($form, &$form_state, $list, $options = array()) {
+  $list = is_array($list) ? $list : array($list);
+  $form = variable_base_form($form, $form_state, $list, $options);
   $form += variable_edit_subform($list, $options);
   return variable_settings_form($form, $options);
+}
+
+/**
+ * Build base form for variable list without fields.
+ *
+ * @param $list
+ *   List of variable names.
+ * @param $options
+ *   Optional array with variable options.
+ */
+function variable_base_form($form, &$form_state, $list, $options = array()) {
+  form_load_include($form_state, 'form.inc', 'variable');
+  // Pass on the values on the form for further reference.
+  $form['#variable_edit_form'] = $list;
+  $form['#variable_options'] = $options;
+  // Run submit callback for variables in form.
+  $form['#submit'][] = 'variable_form_submit_callback';
+  return $form;
 }
 
 /**
@@ -482,6 +503,8 @@ function variable_type_include($type) {
  */
 function variable_module_form($form, $form_state, $module) {
   variable_include();
+  // Pass on the values on the form for further reference.
+  $form['#variable_module_form'] = $module;
   return variable_edit_form($form, $form_state, array_keys(variable_list_module($module)));
 }
 
@@ -490,6 +513,8 @@ function variable_module_form($form, $form_state, $module) {
  */
 function variable_group_form($form, $form_state, $group) {
   variable_include();
+  // Pass on the values on the form for further reference.
+  $form['#variable_group_form'] = $group;
   return variable_edit_form($form, $form_state, array_keys(variable_list_group($group)));
 }
 
@@ -662,10 +687,35 @@ function variable_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['#submit']) && is_array($form['#submit']) && in_array('system_settings_form_submit', $form['#submit'])) {
     // Replace submit callback and use our own function.
     $form['#submit'] = str_replace('system_settings_form_submit', 'variable_settings_form_submit', $form['#submit']);
+    $alter = TRUE;
+  }
+  elseif (isset($form['#variable_edit_form'])) {
+    // This is a variable form, just invoke the hook but don't change submit callback.
+    $alter = TRUE;
+  }
+  if (!empty($alter)) {
     foreach (module_implements('variable_settings_form_alter') as $module) {
       $function = $module . '_variable_settings_form_alter';
       $function($form, $form_state, $form_id);
     }
+  }
+}
+
+/**
+ * Implement validate callback.
+ *
+ * This needs to be in the module as it may be needed by form ajax callbacks.
+ */
+function variable_form_element_validate($element, &$form_state, $form) {
+  $options = isset($form['#variable_options']) ? $form['#variable_options'] : array();
+  $variable = $element['#variable'];
+  variable_include($variable);
+  $variable['value'] = isset($element['#value']) ? $element['#value'] : NULL;
+
+  $error = $variable['validate callback']($variable, $options, $element, $form, $form_state);
+
+  if ($error) {
+    form_error($element, $error);
   }
 }
 
@@ -750,6 +800,7 @@ function variable_settings_form_submit($form, &$form_state) {
   form_state_values_clean($form_state);
   // This may contain some realm options.
   $options = isset($form['#variable_options']) ? $form['#variable_options'] : array();
+
   // Now run regular settings submission but using variable_set_value()
   foreach ($form_state['values'] as $key => $value) {
     if (is_array($value) && isset($form_state['values']['array_filter'])) {

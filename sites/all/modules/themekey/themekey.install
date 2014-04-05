@@ -169,7 +169,7 @@ function themekey_update_6101() {
   ->condition('name', 'themekey', '=')
   ->execute();
 
-  return t('Updated system weight to 0 for themekey.');
+  return t('Updated system weight to 0 for ThemeKey.');
 }
 
 
@@ -211,6 +211,10 @@ function themekey_update_6104() {
  * Implements hook_update_N().
  */
 function themekey_update_6105() {
+  // Coder module complains "global variables should start with a single
+  // underscore followed by the module and another underscore". But $db_type is
+  // defined by drupal core.
+  // @ignore style_global_vars
   global $db_type;
 
   $return = array();
@@ -221,7 +225,7 @@ function themekey_update_6105() {
   if (module_exists('themekey_ui')) {
     $schema_version = drupal_get_installed_schema_version('themekey_ui');
     if (6100 > $schema_version) {
-      $return = drupal_install_schema('themekey_ui');
+      drupal_install_schema('themekey_ui');
 
       if (!variable_get('themekey_nodeaspath', 0)) {
         $sql = '';
@@ -236,7 +240,7 @@ function themekey_update_6105() {
 
         foreach ($result as $row) {
 
-          $return['INSERT']['success'] = db_insert('themekey_ui_node_theme') // Table name no longer needs {}
+          $return['INSERT']['success'] = db_insert('themekey_ui_node_theme')
             ->fields(array(
               'nid' => $row->nid,
               'vid' => $row->vid,
@@ -343,7 +347,7 @@ function themekey_update_6200() {
       }
     }
 
-    $insert_success = db_insert('themekey_properties') // Table name no longer needs {}
+    $insert_success = db_insert('themekey_properties')
     ->fields(array(
       'property' => 'drupal:path',
       'value' => $item->path,
@@ -365,7 +369,7 @@ function themekey_update_6200() {
   db_drop_field('themekey_paths', 'custom');
   db_drop_field('themekey_paths', 'theme');
 
-  return t('Updated Themekey properties.');
+  return t('Updated ThemeKey properties.');
 }
 
 
@@ -373,8 +377,7 @@ function themekey_update_6200() {
  * Implements hook_update_N().
  */
 function themekey_update_6201() {
-  // Don't rebuild anymore when themekey_update_6202() will run
-  //themekey_rebuild();
+  // Moved to themekey_update_6202().
   return '';
 }
 
@@ -404,14 +407,12 @@ function themekey_update_6202() {
   db_add_field('themekey_properties', 'parent', $field_parent);
 
   if ($result = db_query("SELECT * FROM {themekey_properties} WHERE conditions <> :conditions", array(':conditions' => serialize(array())))) {
-
     foreach ($result as $row) {
-
-     $conditions = unserialize($row->conditions);
+      $conditions = unserialize($row->conditions);
       if (is_array($conditions)) {
         $parent = $row->id;
         foreach ($conditions as $condition) {
-          $insert_result = db_insert('themekey_properties') // Table name no longer needs {}
+          $parent = db_insert('themekey_properties')
           ->fields(array(
             'property' =>  $condition['property'],
             'operator' => $condition['operator'],
@@ -423,16 +424,9 @@ function themekey_update_6202() {
             'parent' => $parent,
           ))
           ->execute();
-
-          if ($insert_result) {
-            $parent = db_last_insert_id('themekey_properties', 'id'); // TODO Wofür ist das gut?
-          }
-
         }
       }
-
     }
-
   }
 
   db_drop_field('themekey_properties', 'conditions');
@@ -446,7 +440,7 @@ function themekey_update_6202() {
   db_drop_index('themekey_paths', 'weight');
   db_add_index('themekey_paths', 'path_fit_weight', array('path', 'fit', 'weight'));
 
-  return t('Updated themekey properties.');
+  return t('Updated ThemeKey properties.');
 }
 
 
@@ -466,7 +460,7 @@ function themekey_update_6300() {
   // moved themekey_rebuild() to themekey_update_6301()
 
   db_drop_table('themekey_paths');
-  return t('Update of Themekey ran successfully');
+  return t('Update of ThemeKey ran successfully');
 }
 
 
@@ -517,18 +511,16 @@ function themekey_update_7100() {
   // cleanup for users of older versions of the obsolete module themekey_properties
   variable_del('themekey_properties_debug_show_values');
 
-  return t('Update of Themekey ran successfully');
+  return t('Update of ThemeKey ran successfully');
 }
 
 /**
  * Implements hook_update_N().
  */
 function themekey_update_7101() {
-  module_load_include('inc', 'themekey', 'themekey_base');
-  module_load_include('inc', 'themekey', 'themekey_build');
-  themekey_rebuild();
+  // moved themekey_rebuild() to themekey_update_7104()
 
-  return t('Update of Themekey ran successfully');
+  return t('Update of ThemeKey ran successfully');
 }
 
 /**
@@ -537,12 +529,12 @@ function themekey_update_7101() {
 function themekey_update_7102() {
   variable_del('themekey_override_custom_theme');
 
-  return t('Update of Themekey ran successfully');
+  return t('Update of ThemeKey ran successfully');
 }
 
 
 /**
- * Implements hook_update().
+ * Implements hook_update_N().
  */
 function themekey_update_7103() {
   db_add_field('themekey_properties', 'module', array(
@@ -557,6 +549,29 @@ function themekey_update_7103() {
   db_update('themekey_properties')
     ->fields(array('module' => 'themekey'))
     ->execute();
-  
-  return t('Update of Themekey ran successfully');
+
+  return t('Update of ThemeKey ran successfully');
+}
+
+/**
+ * Rebuild ThemeKey's internal property registry.
+ */
+function themekey_update_7104() {
+  // moved themekey_rebuild() to themekey_update_7301()
+
+  return t('Update of ThemeKey ran successfully');
+}
+
+// function themekey_update_7300() has been erroneously declared in
+// themekey_redeirect.install before.
+
+/**
+ * Rebuild ThemeKey's internal property registry.
+ */
+function themekey_update_7301() {
+  module_load_include('inc', 'themekey', 'themekey_base');
+  module_load_include('inc', 'themekey', 'themekey_build');
+  themekey_rebuild();
+
+  return t('Update of ThemeKey ran successfully');
 }

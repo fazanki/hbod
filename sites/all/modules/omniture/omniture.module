@@ -1,0 +1,508 @@
+<?php
+/**
+ * @file
+ * Drupal Module: Omniture SiteCatalyst Stats
+ * Adds the required Javascript to the bottom of your Drupal pages
+ * to allow tracking by the Omniture SiteCatalyst statistics package.
+ * Based on the Google Analytics package by Mike Carter
+ *
+ * @author: Greg Knaddison
+ * @co-maintainer: Matthew Tucker
+ *
+ */
+
+/**
+ * Implements hook_help().
+ */
+function omniture_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#omniture':
+      return t("Settings for Omniture's SiteCatalyst package");
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function omniture_permission() {
+  return array(
+    'administer SiteCatalyst configuration' => array(
+      'title' => t('Administer SiteCatalyst configuration'),
+    )
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function omniture_menu() {
+  $items['admin/config/system/omniture'] = array(
+    'title' => 'Omniture SiteCatalyst',
+    'description' => "Configure the settings used to integrate Omniture's SiteCatalyst.",
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('omniture_admin_settings'),
+    'access arguments' => array('administer SiteCatalyst configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function omniture_theme($existing, $type, $theme, $path) {
+  return array(
+    'omniture_variables' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_context_plugins().
+ */
+function omniture_context_plugins() {
+  $plugins = array();
+  $plugins['omniture_reaction_variables'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'omniture') .'/plugins/context',
+      'file' => 'omniture_reaction_variables.inc',
+      'class' => 'omniture_reaction_variables',
+      'parent' => 'context_reaction',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry().
+ */
+function omniture_context_registry() {
+  $reg = array(
+    'reactions' => array(
+      'omniture_vars' => array(
+        'title' => t('Omniture Variables'),
+        'plugin' => 'omniture_reaction_variables',
+      ),
+    ),
+  );
+  return $reg;
+}
+
+/**
+ * Implementation of hook_omniture_variables().
+ */
+function omniture_omniture_variables() {
+  $variables = array();
+
+  // Include variables set using the context module.
+  if (module_exists('context')) {
+    if ($plugin = context_get_plugin('reaction', 'omniture_vars')) {
+      $plugin->execute($variables);
+    }
+  }
+
+  // Include variables from the "custom variables" section of the settings form.
+  $settings_variables = variable_get('omniture_variables', array());
+  foreach ($settings_variables as $variable) {
+    $variables[$variable['name']] = $variable['value'];
+  }
+
+  return array('variables' => $variables);
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function omniture_page_alter(&$page) {
+  global $user;
+
+  // Check if we should track the currently active user's role.
+  $track = 0;
+  if (is_array($user->roles)) {
+    foreach ($user->roles as $role) {
+      $role = str_replace(' ', '_', $role);
+      $track += variable_get("omniture_track_{$role}", FALSE);
+    }
+  }
+
+  // Don't track page views in the admin sections, or for certain roles.
+  if (arg(0) == 'admin' || $track <= 0) {
+    return;
+  }
+
+  // Like drupal_add_js, add a query string to the end of the js file location.
+  $query_string = '?' . variable_get('css_js_query_string', '0');
+  $js_file_location = check_plain(variable_get("omniture_js_file_location", 'http://www.example.com/js/s_code_remote_h.js'));
+
+  // Add any custom code snippets if specified and replace any tokens.
+  $context = _omniture_get_token_context();
+  $codesnippet = token_replace(variable_get('omniture_codesnippet', ''), $context, array(
+    'clear' => TRUE,
+    'sanitize' => TRUE,
+  )) . "\n";
+
+  // Format and combine variables in the "right" order
+  // Right order is the code file (list likely to be maintained)
+  // Then admin settings with codesnippet first and finally taxonomy->vars
+  $extra_variables_formatted = $codesnippet;
+
+  $header = "<!-- SiteCatalyst code version: ";
+  $header .= check_plain(variable_get("omniture_version", 'H.20.3.'));
+  $header .= "\nCopyright 1997-2009 Omniture, Inc. More info available at http://www.omniture.com -->\n";
+  $header .= "<script type=\"text/javascript\" language=\"JavaScript\" src=\"";
+  $header .= $js_file_location . $query_string;
+  $header .= "\"></script>\n";
+  $header .= "<script type=\"text/javascript\" language=\"JavaScript\"><!--\n";
+
+  $footer = '/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/'."\n";
+  $footer .= 'var s_code=s.t();if(s_code)document.write(s_code)//--></script>'."\n";
+  $footer .= '<script language="JavaScript" type="text/javascript"><!--'."\n";
+  $footer .= "if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')"."\n";
+  $footer .= '//--></script><noscript><a href="http://www.omniture.com" title="Web Analytics"><img src="';
+  $footer .= check_plain(variable_get("omniture_image_file_location", 'http://examplecom.112.2O7.net/b/ss/examplecom/1/H.20.3--NS/0')).'/'.rand(0, 10000000).'"'."\n";
+  $footer .= 'height="1" width="1" border="0" alt="" /></a></noscript><!--/DO NOT REMOVE/-->'."\n";
+  $footer .= '<!-- End SiteCatalyst code version: ';
+  $footer .=  check_plain(variable_get("omniture_version", 'H.20.3.'));
+  $footer .= ' -->'."\n";
+
+  if ($omniture_hooked_vars = module_invoke_all('omniture_variables', $page)) {
+    if (isset($omniture_hooked_vars['header'])) {
+      $header = $omniture_hooked_vars['header'];
+    }
+    if (isset($omniture_hooked_vars['variables'])) {
+      $extra_variables_formatted .= _omniture_format_variables($omniture_hooked_vars['variables']);
+    }
+    if (isset($omniture_hooked_vars['footer'])) {
+      $footer = $omniture_hooked_vars['footer'];
+    }
+  }
+
+  $page['page_bottom']['omniture'] =  array(
+    'header'=> array(
+      '#type' => 'markup',
+      '#markup' => $header,
+    ),
+    'variables'=> array(
+      '#type' => 'markup',
+      '#markup' => $extra_variables_formatted,
+    ),
+    'footer'=> array(
+      '#type' => 'markup',
+      '#markup' => $footer,
+    ),
+  );
+}
+
+/**
+ * Helper function to format Omniture variables.
+ */
+function _omniture_format_variables(array $variables = array()) {
+  $extra_variables = omniture_get_variables();
+
+  // Create context data to be used by token.
+  $context = !empty($variables) ? _omniture_get_token_context() : array();
+
+  $variables_formatted = '';
+  foreach ($variables as $key => $value) {
+    if (is_array($value)) {
+      // Use the last element.
+      $value = end($value);
+    }
+
+    if (isset($extra_variables[$key])) {
+      $value = $extra_variables[$key];
+    }
+
+    $key = check_plain($key);
+    $value = token_replace($value, $context, array(
+      'clear' => TRUE,
+      'sanitize' => TRUE,
+    ));
+    $variables_formatted .= "{$key}=\"{$value}\";\n";
+  }
+  return $variables_formatted;
+}
+
+/**
+ * Menu callback; Omniture settings.
+ */
+function omniture_admin_settings($form, &$form_state) {
+  $form['general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General settings'),
+    '#collapsible' => TRUE,
+    '#weight' => '-10',
+  );
+
+  $form['general']['omniture_js_file_location'] = array(
+    '#type' => 'textfield',
+    '#title' => t("Complete path to SiteCatalyst Javascript file"),
+    '#default_value' => check_plain(variable_get("omniture_js_file_location", 'http://www.example.com/js/s_code_remote_h.js')),
+  );
+
+  $form['general']['omniture_image_file_location'] = array(
+    '#type' => 'textfield',
+    '#title' => t("Complete path to SiteCatalyst Image file"),
+    '#default_value' => check_plain(variable_get("omniture_image_file_location", 'http://examplecom.112.2O7.net/b/ss/examplecom/1/H.20.3--NS/0')),
+  );
+
+  $form['general']['omniture_version'] = array(
+    '#type' => 'textfield',
+    '#title' => t("SiteCatalyst version (used by omniture for debugging)"),
+    '#default_value' => check_plain(variable_get("omniture_version", 'H.20.3.')),
+  );
+
+  $form['roles'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('User role tracking'),
+    '#collapsible' => TRUE,
+    '#description' => t('Define which user roles should be tracked by SiteCatalyst.'),
+    '#weight' => '-6',
+  );
+
+  $result = db_select('role','r')
+    ->fields('r')
+    ->orderBy('name', 'ASC')
+    ->execute();
+
+  foreach ($result as $role) {
+    // Can't use empty spaces in varname.
+    $role_varname = str_replace(' ', '_', $role->name);
+    // Only the basic roles are translated.
+    $role_name = in_array($role->rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)) ? t($role->name) : $role->name;
+    $form['roles']["omniture_track_{$role_varname}"] = array(
+      '#type' => 'checkbox',
+      '#title' => $role_name,
+      '#default_value' => variable_get("omniture_track_{$role_varname}", FALSE),
+    );
+  }
+
+  $form['variables'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Custom Variables'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('You can define tracking variables here.'),
+    '#weight' => '-3',
+  );
+  if (module_exists('token')) {
+    $form['variables']['#description'] .= t('You can use the table below to insert tokens as varible values.');
+  }
+
+  $existing_variables = isset($form_state['input']['omniture_variables']) ? $form_state['input']['omniture_variables'] : variable_get('omniture_variables', array());
+  _omniture_variables_form($form['variables'], $existing_variables);
+
+
+  $form['advanced'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Advanced'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('You can add custom SiteCatalyst code here.'),
+    '#weight' => '-2',
+  );
+  $examples = array(
+    'if ([current-date:custom:N] >= 6) { s.prop5 = "weekend"; }',
+    'if ("[current-page:url:path]" == "node") {s.prop9 = "homepage";} else {s.prop9 = "[current-page:title]";}',
+  );
+  $form['advanced']['omniture_codesnippet'] = array(
+    '#type' => 'textarea',
+    '#title' => t('JavaScript Code'),
+    '#default_value' => variable_get('omniture_codesnippet', ''),
+    '#rows' => 15,
+    '#description' => t('Examples:') . theme('item_list', array('items' => $examples)),
+  );
+  $form['advanced']['tokens'] = array(
+    '#theme' => 'token_tree',
+    '#token_types' => array('node', 'menu', 'term', 'user'),
+    '#global_types' => TRUE,
+    '#click_insert' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Helper form builder for a variables form.
+ */
+function _omniture_variables_form(&$form, $existing_variables = array()) {
+  $form['omniture_variables'] = array(
+    '#type' => 'markup',
+    '#tree' => FALSE,
+    '#prefix' => '<div id="omniture-variables-wrapper">',
+    '#suffix' => '</div>',
+    '#theme' => 'omniture_variables',
+    '#element_validate' => array('omniture_variables_form_validate'),
+  );
+  // Add existing variables to the form unless they are empty.
+  foreach ($existing_variables as $key => $data) {
+    _omniture_variable_form($form, $key, $data);
+  }
+  // Add one blank set of variable fields.
+  _omniture_variable_form($form, count($existing_variables));
+  $form['add_another_variable'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add another variable'),
+    '#submit' => array('omniture_add_another_variable_submit'),
+    '#limit_validation_errors' => array(),
+    '#ajax' => array(
+      'callback' => 'omniture_add_another_variable_js',
+      'wrapper' => 'omniture-variables-wrapper',
+      'effect' => 'fade',
+    ),
+  );
+  $form['tokens'] = array(
+    '#theme' => 'token_tree',
+    '#token_types' => array('node', 'menu', 'term', 'user'),
+    '#global_types' => TRUE,
+    '#click_insert' => TRUE,
+  );
+}
+
+/**
+ * Helper form builder for an individual variable.
+ */
+function _omniture_variable_form(&$form, $key, $data = array()) {
+  $form['omniture_variables'][$key]['name'] = array(
+    '#type' => 'textfield',
+    '#title_display' => 'invisible',
+    '#title' => t('Name'),
+    '#default_value' => isset($data['name']) ? $data['name'] : '',
+    '#parents' => array('omniture_variables', $key, 'name'),
+    '#attributes' => array('class' => array('field-variable-name')),
+  );
+  $form['omniture_variables'][$key]['value'] = array(
+    '#type' => 'textfield',
+    '#title_display' => 'invisible',
+    '#title' => t('Value'),
+    '#default_value' => isset($data['value']) ? $data['value'] : '',
+    '#parents' => array('omniture_variables', $key, 'value'),
+    '#attributes' => array('class' => array('field-variable-value')),
+  );
+  if (empty($data)) {
+    $form['omniture_variables'][$key]['name']['#description'] = t('Example: prop1');
+    $form['omniture_variables'][$key]['value']['#description'] = t('Example: [current-page:title]');
+  }
+}
+
+/**
+ * Validation function used by the variables form.
+ */
+function omniture_variables_form_validate($form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] != t('Add another variable')) {
+    omniture_variables_trim_empties($form_state['values']);
+  }
+}
+
+/**
+ * Given the values entered into the omniture variables form, remove any empty
+ * variables (i.e. both "name" & "value" are blank).
+ */
+function omniture_variables_trim_empties(&$values, $parent = 'omniture_variables') {
+  foreach ($values as $key => &$val) {
+    if ($key === $parent) {
+      // We found the omniture variables.
+      foreach ($val as $k => $v) {
+        if (empty($val[$k]['name']) && empty($val[$k]['value'])) {
+          unset($val[$k]);
+        }
+      }
+      // Reset the array indexes to prevent wierd behavior caused by a variable
+      // being removed in the middle of the array.
+      $val = array_values($val);
+      break;
+    }
+    elseif (is_array($val)) {
+      omniture_variables_trim_empties($val, $parent);
+    }
+  }
+}
+
+/**
+ * AJAX callback function for adding variable fields to the settings form.
+ */
+function omniture_add_another_variable_js($form, $form_state) {
+  return $form['variables']['omniture_variables'];
+}
+
+/**
+ * Submit handler to add more variables.
+ */
+function omniture_add_another_variable_submit($form, &$form_state) {
+  $form_state['omniture_variables'] = $form_state['input']['omniture_variables'];
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Form validation.
+ */
+function omniture_admin_settings_validate($form, &$form_state) {
+  // Remove any empty variables.
+  foreach ($form_state['values']['omniture_variables'] as $key => $val) {
+    if (empty($val['name']) && empty($val['value'])) {
+      unset($form_state['values']['omniture_variables'][$key]);
+    }
+  }
+  $form_state['values']['omniture_variables'] = array_values($form_state['values']['omniture_variables']);
+}
+
+/**
+ * Used to replace the value of omniture variables. The variables need to be
+ * defined with hook_omniture_variables().
+ *
+ * @param string $name
+ *  The property.
+ * @param string $value
+ *  The value for the property.
+ */
+function omniture_set_variable($name = NULL, $value = NULL) {
+  $variables = &drupal_static(__FUNCTION__, array());
+
+  if (empty($name)) {
+    return $variables;
+  }
+  else {
+    $variables[$name] = $value;
+  }
+}
+
+function omniture_get_variables() {
+  return omniture_set_variable();
+}
+
+/**
+ * Theme function for the "variables" form.
+ */
+function theme_omniture_variables($variables) {
+  $form = $variables['form'];
+
+  $add_button = drupal_render($form['add_another_variable']);
+  unset($form['add_another_variable']);
+
+  $headers = array(t('Name'), t('Value'));
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    $rows[] = array(drupal_render($form[$key]['name']), drupal_render($form[$key]['value']));
+  }
+
+  return theme('table', array('header' => $headers, 'rows' => $rows)) . $add_button;
+}
+
+/**
+ * Create a data array to be used by token_replace().
+ *
+ * @return array
+ */
+function _omniture_get_token_context() {
+  $context = &drupal_static(__function__);
+
+  if (is_null($context)) {
+    $context['node'] = menu_get_object('node');
+    $context['term'] = menu_get_object('taxonomy_term', 2);
+    $context['menu'] = menu_load('main-menu');
+  }
+
+  return $context;
+}

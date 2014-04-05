@@ -510,7 +510,7 @@ class i18n_string_textgroup_default {
    *   SAVED_UPDATED | SAVED_NEW | SAVED_DELETED | FALSE (If the string is to be removed but has no source)
    */
   public function string_update($i18nstring, $options = array()) {
-    $options += array('watchdog' => TRUE, 'messages' => FALSE, 'check' => TRUE);
+    $options += array('watchdog' => TRUE, 'messages' => $this->debug, 'check' => TRUE);
     if ((!$options['check'] || $this->string_check($i18nstring, $options)) && $i18nstring->get_string()) {
       // String is ok, has a value so we store it into the database.
       $status = $this->string_add($i18nstring, $options);
@@ -1188,6 +1188,10 @@ class i18n_string_object_wrapper extends i18n_object_wrapper {
    * Translate access (localize strings)
    */
   protected function localize_access() {
+    // We could check also whether the object has strings to translate:
+    //   && $this->get_strings(array('empty' => TRUE))
+    // However it may be better to display the 'No available strings' message
+    // for the user to have a clue of what's going on. See i18n_string_translate_page_object()
     return user_access('translate interface') && user_access('translate user-defined strings');
   }
 

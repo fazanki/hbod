@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * Test file for the Omniture module.
+ */
+
+class omnitureBaseTest extends DrupalWebTestCase {
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    // Enable a couple modules.
+    parent::setUp('omniture');
+    menu_rebuild();
+
+    // Create an admin user with all the permissions needed to run tests.
+    $this->admin_user = $this->drupalCreateUser(array('administer SiteCatalyst configuration', 'access administration pages'));
+    $this->drupalLogin($this->admin_user);
+
+    // Set some default settings.
+    variable_set("omniture_js_file_location", 'http://www.example.com/js/s_code_remote_h.js');
+    variable_set("omniture_image_file_location", 'http://examplecom.112.2O7.net/b/ss/examplecom/1/H.20.3--NS/0');
+    variable_set("omniture_version", 'H.20.3.');
+
+  }
+}
+
+class omnitureGeneralTest extends omnitureBaseTest {
+  /**
+   * Implements getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Omniture General Tests'),
+      'description' => t('Tests the general functionality of the omniture module.'),
+      'group' => t('Omniture'),
+    );
+  }
+
+  // Test that tags with override values use them.
+  function testOmnitureTrackingCode() {
+    $this->drupalGet('<front>');
+
+    $this->assertRaw("<!-- SiteCatalyst code version: ", 'The SiteCatalyst code was found.');
+    $this->assertRaw(variable_get("omniture_js_file_location"), 'The Omniture js file was properly referenced.');
+    $this->assertRaw(variable_get("omniture_image_file_location"), 'The Omniture backup image was properly referenced.');
+    $this->assertRaw(variable_get("omniture_version"), 'The correct Omniture version was found.');
+  }
+}

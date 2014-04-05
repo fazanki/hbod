@@ -1,6 +1,154 @@
+2013-08-21 Jason Flatt drupal@oadaeh.net
+  * mass_contact.admin.inc, mass_contact.page.inc:
+    * Give the admin the choice of using either check boxes or select lists when
+      displaying the category list to the message sender. Fixes
+      https://drupal.org/node/1061120.
+
+2013-08-13 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact.admin.inc, mass_contact.page.inc:
+    * Add a mechanism for queuing the messages to be sent during Cron runs.
+    * Moved the _mass_contact_send_message() function to mass_contact.module to
+      facilitate the queuing.
+
+2013-07-02 Jason Flatt drupal@oadaeh.net
+  * README.txt:
+    * Added information about the Attachment location for when upgrading from
+      6.x, per kruser on https://drupal.org/node/1863640.
+  * mass_contact.install:
+    * Added a check and conversion of the Attachment location setting for when
+      upgrading from 6.x
+
+2013-05-06 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Fix incorrect variable usage in three places, per denisgre on
+      http://drupal.org/node/1987434.
+
+2013-04-16 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module:
+    * Allow for opting in and out of all categories, per stomachfoot on
+      http://drupal.org/node/1969754.
+  * mass_contact.page.inc:
+    * Fix how the subject is sanitized, so it does not become unreadable, per
+      Shadowdare on http://drupal.org/node/1971386.
+
+2013-04-11 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Potential fixes for http://drupal.org/node/1908260:
+      Change the email addresses to have quotes around the name.
+      Defaulted the option to include names to no (0).
+
+2013-04-05 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Check for empty variables before using them. Fix for
+      http://drupal.org/node/1962410.
+
+2013-03-29 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Make use of the $format variable where it was intended to be used.
+    * Remove the now unnecessary $node_message variable.
+    * Save the message body directly into params, rather than an intermediate
+      variable.
+
+2013-02-28 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module:
+    * Check for empty data value before iterating on it.
+      http://drupal.org/node/1919818
+
+2013-02-12 Jason Flatt drupal@oadaeh.net
+  * mass_contact.info, mass_contact.install, mass_contact.module,
+    mass_contact.admin.inc, mass_contact.page.inc, mass_contact_role.inc,
+    mass_contact_taxonomy.inc:
+    * Cleaned up based on Drupal coding standards.
+
+2013-01-30 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact.admin.inc, mass_contact.page.inc,
+    mass_contact_role.inc, mass_contact_taxonomy.inc:
+    * Final troubleshooting and bug fixing from the previous changes.
+  * mass_contact.page.inc:
+    * Run array_unique() on the recipient list, not the category, per zigazou on
+      https://drupal.org/node/1795286.
+
+2013-01-27 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact.page.inc, mass_contact_role.inc:
+    * More troubleshooting and bug fixing from the previous changes.
+  * mass_contact.module, mass_contact.page.inc:
+    * Convert the body processing to an array, as required by hook_mail(), and
+      verify input formats are correctly accounted for.
+
+2013-01-25 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact.page.inc, mass_contact_role.inc:
+    * Troubleshooting and bug fixing from the previous changes.
+
+2013-01-21 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact_role.inc, mass_contact_taxonomy.inc:
+    * Continued modification of opting out of selected categories.
+
+2013-01-18 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact_role.inc, mass_contact_taxonomy.inc:
+    * Modified opting out of selected categories to use the Ctools plugin
+      integration.
+
+2013-01-17 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact.admin.inc, mass_contact.page.inc,
+    mass_contact_role.inc, mass_contact_taxonomy.inc:
+    * Cleaned up Ctools plugin integration.
+
+2013-01-14 Jason Flatt drupal@oadaeh.net
+  * mass_contact_role.inc:
+    * Fix problem when attempting to run a query with an empty variable, per
+      arkestra on https://drupal.org/node/1529212 and tutumlum on
+      https://drupal.org/node/1855650.
+  * mass_contact.module, mass_contact.page.inc:
+    * Update some comments.
+  * mass_contact_taxonomy.inc: Work around not being able to use OR
+    * w/EntityFieldQuery(), per arkestra on https://drupal.org/node/1529212.
+  * mass_contact.module:
+    * Fix opting out of selected categories (for roles -- needs more work for
+      taxonomies), per george esper on https://drupal.org/node/1499440.
+  * mass_contact.module:
+    * Fix opting back in after opting out of a selected category, per
+      https://drupal.org/node/1461560.
+
+2012-11-26 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Format the user name using to the Drupal API, per tutumlum on
+      http://drupal.org/node/1850540
+
+2012-11-20 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Complete adding the option of including a from and/or to name.
+      https://drupal.org/node/574482
+
+2012-10-27 Jason Flatt drupal@oadaeh.net
+  * mass_contact.admin.inc:
+    * Begin adding the option of including a from and/or to name.
+
+2012-10-23 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Fix the logic for selecting the from name and email address back to the
+      way it was before the security patch went in.
+  * mass_contact.admin.inc:
+    * Correct misspelling of word.
+
+2012-10-10 Jason Flatt drupal@oadaeh.net
+  * mass_contact.module, mass_contact.page.inc:
+    * Correct the links to Mass Contact's permissions, per hoersche on
+      https://drupal.org/node/1797454
+
+2012-10-09 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Attempt to fix reported problem w/sender's info being replaced.
+      http://drupal.org/node/1793078
+
+2012-10-02 Jason Flatt drupal@oadaeh.net
+  * mass_contact.page.inc:
+    * Fix problem with retrieving the correct filter format in certain
+      situations. http://drupal.org/node/1793078
+
 2012-09-05 Jason Flatt drupal@oadaeh.net
   * mass_contact.page.inc:
-    * Added extra permissions checks.
+    * Added extra permissions checks, per security advisory here:
+      http://drupal.org/node/1782832
 
 2012-02-02 Jason Flatt drupal@oadaeh.net
   * mass_contact.page.inc:

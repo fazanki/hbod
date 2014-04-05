@@ -1,0 +1,14 @@
+name = Omniture
+description = Adds Omniture SiteCatalyst javascript tracking code to your site's pages.
+core = 7.x
+files[] = omniture.module
+files[] = omniture.install
+files[] = tests/omniture.test
+package = Statistics
+
+; Information added by drupal.org packaging script on 2012-11-27
+version = "7.x-1.0-alpha1+17-dev"
+core = "7.x"
+project = "omniture"
+datestamp = "1353979018"
+

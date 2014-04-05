@@ -1,0 +1,48 @@
+<?php
+/**
+ * @file
+ * Installs the module, Omniture.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function omniture_install() {
+  $result = db_select('role', 'r')
+    ->fields('r')
+    ->orderBy('name', 'ASC')
+    ->execute();
+
+  foreach ($result as $role) {
+    $role_varname = str_replace(" ", "_", $role->name);
+    $omniture_role = "omniture_track_{$role_varname}";
+
+    // Check if variable is not already set from a previous install.
+    if (strpos(variable_get($omniture_role, 'new'), 'new') !== FALSE) {
+      variable_set($omniture_role, TRUE);
+      drupal_set_message(t('Role %rolename is now being tracked by SiteCatalyst.', array('%rolename' => $role->name)));
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function omniture_uninstall() {
+  $result = db_select('variable', 'v')
+    ->fields('v')
+    ->condition('v.name', 'omniture_%', 'LIKE')
+    ->execute();
+
+  foreach ($result as $variable) {
+    variable_del($variable->name);
+  }
+}
+
+/**
+ * Update to Drupal 7. Set the version number for new installs.
+ */
+function omniture_update_7000() {
+  $ret = array();
+  return $ret;
+}

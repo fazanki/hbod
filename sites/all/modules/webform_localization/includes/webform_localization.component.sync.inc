@@ -8,7 +8,7 @@
 /**
  * Development sponsored by Riot Games.
  *
- * @author German Martin <gmartin.prg@gmail.com>
+ * @author German Martin <gmartin.php@gmail.com>
  */
 
 /**

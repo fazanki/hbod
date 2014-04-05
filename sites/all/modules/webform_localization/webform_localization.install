@@ -22,6 +22,7 @@ function webform_localization_install() {
     'not null' => TRUE,
     'default' => '',
   ));
+  variable_set('webform_localization_using_uuid', module_exists('uuid'));
 }
 
 /**
@@ -29,6 +30,7 @@ function webform_localization_install() {
  */
 function webform_localization_uninstall() {
   db_drop_field('webform_submissions', 'language');
+  variable_del('webform_localization_using_uuid');
 }
 
 /**

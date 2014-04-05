@@ -1,0 +1,7 @@
+<?php
+
+function {search_translate}_menu_alter(&$items){
+$items['search']['title'] = t('Search');
+}
+
+?>
